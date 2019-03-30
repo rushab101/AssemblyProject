@@ -3,14 +3,13 @@
 #include <stdlib.h>
 #include <time.h>
     
-void v_sync_wait();
-
 volatile int pixel_buffer_start; // global variable
 
-void clear_screen();
-void draw_line(int x1, int y1, int x2, int y2, short int line_colour);
 void plot_pixel(int x, int y, short int line_color);
-
+void clear_screen();
+void draw_line(int x0, int y0, int x1, int y1, short int line_color);
+void swap(int *x, int *y);
+void v_sync_wait();
 
 //Global Players
     int Player1_X=300;
@@ -30,16 +29,20 @@ int main(void)
     int dice;
     dice = ( (rand() % 3) + 1);
     
-    int increment=10;
+    int increment=1;
         
     volatile int*HEX5_6_ptr=0xFF20020;
     
     
-    volatile int * pixel_ctrl_ptr = (int *)0xFF203020;
+volatile int *pixel_ctrl_ptr = (int *)0xFF203020;
     /* Read location of the pixel buffer from the pixel buffer controller */
     pixel_buffer_start = *pixel_ctrl_ptr;
+	
 	//Drawing the board
+    
     clear_screen();
+    
+     
     
     //Outer Borders
    draw_line(0, 0, 319,0 , 0xFFFF);  
@@ -308,33 +311,18 @@ int main(void)
    
     
     
-    
-    
- 
-    
-    
-    while (true){
-        //Player 1
-    for (int i=Player1_X ; i <Player1_X+10 ; i++){
-    draw_line(i, Player1_Y, i, Player1_Y+8, 0x07E0);   // this line is Green
-    }
-    
-     for (int i=Player1_X ; i <Player1_X+10 ; i++){
-    draw_line((i+increment), Player1_Y, (i+increment), Player1_Y+8, 0x07E0);   // this line is Green
-          v_sync_wait();
-       i+=increment;   
-    }    
-        //Player 2
+    //Player 2
          for (int i=Player2_X ; i <Player2_X+10 ; i++){
-    draw_line(i, Player2_Y, i, Player2_Y+10, 0xEC64);   // this line is Brown
+             for (int j=Player2_Y; j <Player2_Y+10 ; j ++)
+    plot_pixel(i, j, 0xEC64);   // this line is Brown
      }
-      for (int i=Player2_X ; i <Player2_X+10 ; i++){
-    draw_line((i+increment), Player2_Y, (i+increment), Player2_X+8, 0xEC64);   // this line is Green
-          v_sync_wait();
-       i+=increment;   
-    } 
-        
-    }  
+    //Player1
+   for (int i=Player1_X; i < Player1_X+10; i ++)
+        for (int j=Player1_Y; j < Player1_Y+10; j ++)
+        plot_pixel(i,j, 0x07E0);
+    
+   
+  
     
    
         
@@ -345,84 +333,13 @@ int main(void)
 
    
     //draw_line(319, 0, 0, 239, 0xF81F);   // this line is a pink color
-}
-
-void clear_screen(){
-    int i, j;
-    // draw every pixel on the screen in the colour black
-    for (i = 0; i < 320; i++){
-        for (j = 0; j < 240; j++){
-            plot_pixel(i,j,0x0);
-        }
-    }
-}
-
-void draw_line(int x1, int y1, int x2, int y2, short int line_colour){
-    // instantiate pointers to be used for swapping
-    int *x1_ptr = x1;
-    int *x2_ptr = x2;
-    int *y1_ptr = y1;
-    int *y2_ptr = y2;
-    bool is_steep;
-    if (abs(y2 - y1) > abs(x2 - x1)){
-        is_steep = true;
-    } else {
-        is_steep = false;
-    }
+    while (true){
+	//Player 1
     
-    // if the line is steep, swap the x and y coordinates to reduce the slope
-    if (is_steep){
-        int temp = x1;
-        x1 = y1;
-        y1 = temp;
-        temp = x2;
-        x2 = y2;
-        y2 = temp;
-    }
-    // if the line points in the negative x-direction, swap the x-coordinates to draw it in the positive direction
-    if (x1 > x2){
-        int temp = x1;
-        x1 = x2;
-        x2 = temp;
-        temp = y1;
-        y1 = y2;
-        y2 = temp;
-    }
-
-    int dx = x2 - x1;
-    int dy = abs(y2 - y1);
-    int error = - (dx/2);
-    int y_draw = y1;
-    int y_step;
-    
-    // determine steps in y-direction based on which way the line points
-    if (y1 < y2){
-        y_step = 1;
-    } else {
-        y_step = -1;
-    }
-	
-    int x_draw;
-    // draw every pixel of the line
-    for (x_draw = x1; x_draw < x2; x_draw++){
-        if (is_steep){
-            plot_pixel(y_draw, x_draw, line_colour);
-        } else {
-            plot_pixel(x_draw, y_draw, line_colour);
-        }
-        error += dy;
-
-        // increment the y when necessary
-        if (error >= 0){
-            y_draw += y_step;
-            error -= dx;
-        }
-    }
-}
-
-void plot_pixel(int x, int y, short int line_color)
-{
-    *(short int *)(pixel_buffer_start + (y << 10) + (x << 1)) = line_color;
+      	
+       v_sync_wait();
+        
+    }  
 }
 
 void v_sync_wait() {
@@ -432,4 +349,66 @@ void v_sync_wait() {
     while(1) {
         if((*status & 1) == 0) break;
     } 
+}
+
+// code not shown for clear_screen() and draw_line() subroutines
+void clear_screen() {
+    int i=0, j=0;
+    for(i = 0; i < 320; i++) {
+        for(j = 0; j < 240; j++) {
+            plot_pixel(i, j, 0x0000);
+        }
+    }
+    return;
+}
+
+void draw_line(int x0, int y0, int x1, int y1, short int line_color) {
+    bool is_steep = abs(y1 - y0) > abs (x1 - x0);
+    if(is_steep) {
+        swap(&x0, &y0);
+        swap(&x1, &y1);
+    }
+    if(x0 > x1) {
+        swap(&x0, &x1);
+        swap(&y0, &y1);
+    }
+
+    int deltax = x1 - x0;
+    int deltay = abs(y1 - y0);
+    int error = -(deltax / 2);
+    int y = y0;
+    int y_step;
+
+    if(y0 < y1) {
+        y_step = 1;
+    }
+    else {
+        y_step = -1;
+    }
+
+    int x;
+    for(x = x0; x <= x1; x++) {
+        if(is_steep)
+            plot_pixel(y, x, line_color);
+        else
+            plot_pixel(x, y, line_color);
+        error += deltay;
+        if(error >= 0) {
+            y += y_step;
+            error -= deltax;
+        }
+    }
+    return;
+}
+
+void plot_pixel(int x, int y, short int line_color){
+    *(short int *)(pixel_buffer_start + (y << 10) + (x << 1)) = line_color;
+    return;
+}
+
+void swap(int *x, int *y) {
+    int temp = *x;
+    *x = *y;
+    *y = temp;
+    return;
 }
