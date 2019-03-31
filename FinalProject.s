@@ -38,7 +38,18 @@ int main(void)
 {
     srand(time(NULL));
     //Flags
+    short int colour[] = {0x001F, 0x07E0, 0xF800, 0xF81F, 0xFFFF};
+    volatile int*HEX5_6_ptr=0xFF20020;
+     unsigned char seven_seg_decode_table[] = {0x3F, 0x06, 0x5B, 0x4F, 0x66, 0x6D, 0x7D, 0x07,
+    0x7F, 0x67, 0x77, 0x7C, 0x39, 0x5E, 0x79, 0x71};
+      // unsigned char hex_segs[] = {0, 0};
     
+    
+    int b_colour[8];
+    for (int i = 0; i < 8; i++){
+       b_colour[i] = colour[rand() % 5];   // random colour
+    }
+
  	
     //Rotations for player 1
     bool left=true;
@@ -53,12 +64,12 @@ int main(void)
     bool right2=false;
     bool down2=false;
     bool Player2_done=false;
-    int turn=0; 
+     int turn=0;
     int dice=0;
     
     int increment=1;
         
-    volatile int*HEX5_6_ptr=0xFF20020;
+    
     
     
 volatile int *pixel_ctrl_ptr = (int *)0xFF203020;
@@ -223,7 +234,8 @@ volatile int *pixel_ctrl_ptr = (int *)0xFF203020;
          for (int j=195 ; j < 197; j ++){
               for (int k=75; k < 77; k ++) {
          		for (int l=205 ; l <207 ; l ++) {
-    draw_line(i, j, k, l, 0xFFFF); 
+                     for (int a=0 ; a <8; a++)
+    draw_line(i, j, k, l, b_colour[a]); 
                 }
               }
          }
@@ -232,7 +244,8 @@ volatile int *pixel_ctrl_ptr = (int *)0xFF203020;
          for (int j=195 ; j < 197; j ++){
               for (int k=75; k < 77; k ++) {
          		for (int l=185 ; l <207 ; l ++) {
-    draw_line(i, j, k, l, 0xFFFF); 
+                     for (int a=0 ; a <8; a++ )
+    draw_line(i, j, k, l, b_colour[a]); 
                 }
               }
          }
@@ -350,18 +363,18 @@ volatile int *pixel_ctrl_ptr = (int *)0xFF203020;
         
     //Conditions for dice Roll
     
-    
-
-     
-    
    
+	
+     
+
     
    
    
     //draw_line(319, 0, 0, 239, 0xF81F);   // this line is a pink color
     while (true){
-      
-    dice= ((rand()% 3) +1);
+          dice=rand()% 3;
+     
+    
       //Boundaries for Player 1  
        if ((Player1_X<=15) && (Player1_Y==212)){
             up=true; 
@@ -480,6 +493,15 @@ volatile int *pixel_ctrl_ptr = (int *)0xFF203020;
         plot_pixel(i,j, 0x07E0);    
                   updateValue_Player1();  
                     left=false;
+                    up=true;
+                }
+            else if ((Player1_X>=79) && (Player1_X<109) && (Player1_Y>209)){  //At the Red Tile
+                Player1_X=Player1_X-85; 
+              for (int i=Player1_X; i < Player1_X+10; i ++)  
+        for (int j=Player1_Y; j < Player1_Y+10; j ++)
+        plot_pixel(i,j, 0x07E0);    
+                  updateValue_Player1();  
+                left=false;
                     up=true;
                 }
                 
@@ -788,7 +810,7 @@ volatile int *pixel_ctrl_ptr = (int *)0xFF203020;
                 }
                
                  else {
-                 Player2_X=Player2_X-55; 
+                 Player2_X=Player2_X-60; 
         for (int i=Player2_X; i < Player2_X+10; i ++)
         for (int j=Player2_Y; j < Player2_Y+10; j ++)
         plot_pixel(i,j, 0xEC64);
@@ -833,7 +855,18 @@ volatile int *pixel_ctrl_ptr = (int *)0xFF203020;
                  left2=false;
                     up2=true;
                 }
+                 else if ((Player2_X>=79) && (Player2_X<109) && (Player2_Y>209)){  //At the Red Tile
+                Player2_X=Player2_X-80; 
+        for (int i=Player2_X; i < Player2_X+10; i ++)
+        for (int j=Player2_Y; j < Player2_Y+10; j ++)
+        plot_pixel(i,j, 0xEC64);    
+                  updateValue_Player2();
+                     left2=false;
+                    up2=true;
+                }
                 
+
+               
                 
                 else{
                  Player2_X=Player2_X-90; 
@@ -1083,16 +1116,16 @@ volatile int *pixel_ctrl_ptr = (int *)0xFF203020;
         }
         turn++;
         
-//       if ((player1==true) && (player2==true)){
-//       if (Money1>Money2){
-//        player1win();
-//           break;
-//        }
-//        else  if (Money2>Money1){
-//           player2win();   
-//            break;
-//          }
-//       }
+   //  if ((player1==true) && (player2==true)){
+    //   if (Money1>Money2){
+     //   player1win();
+       //    break;
+      //  }
+      //  else  if (Money2>Money1){
+      //     player2win();   
+       //     break;
+       //   }
+      // }
       	
        v_sync_wait();
         
@@ -1324,7 +1357,7 @@ void player1win(){
     clear_screen();
      for (int i=0; i <320 ; i++ )
         for (int j=0; j <240 ; j++)
-            plot_pixel (i,j, 0xEC64);
+            plot_pixel (i,j, 0xFFE0);
     
          for (int i=135; i <210 ; i++ )
         for (int j=75; j <150 ; j++)
