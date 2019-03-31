@@ -5,9 +5,79 @@
 //Pink Tile=+1
 //Red Tile=+2
 //Blue Tile=+3
-//Teal Tile = +5    
-volatile int pixel_buffer_start; // global variable
+//Teal Tile = +5
+    
+#define BOARD                 "DE1-SoC"
 
+/* Memory */
+#define DDR_BASE              0x00000000
+#define DDR_END               0x3FFFFFFF
+#define A9_ONCHIP_BASE        0xFFFF0000
+#define A9_ONCHIP_END         0xFFFFFFFF
+#define SDRAM_BASE            0xC0000000
+#define SDRAM_END             0xC3FFFFFF
+#define FPGA_ONCHIP_BASE      0xC8000000
+#define FPGA_ONCHIP_END       0xC803FFFF
+#define FPGA_CHAR_BASE        0xC9000000
+#define FPGA_CHAR_END         0xC9001FFF
+
+/* Cyclone V FPGA devices */
+#define LEDR_BASE             0xFF200000
+#define HEX3_HEX0_BASE        0xFF200020
+#define HEX5_HEX4_BASE        0xFF200030
+#define SW_BASE               0xFF200040
+#define KEY_BASE              0xFF200050
+#define JP1_BASE              0xFF200060
+#define JP2_BASE              0xFF200070
+#define PS2_BASE              0xFF200100
+#define PS2_DUAL_BASE         0xFF200108
+#define JTAG_UART_BASE        0xFF201000
+#define JTAG_UART_2_BASE      0xFF201008
+#define IrDA_BASE             0xFF201020
+#define TIMER_BASE            0xFF202000
+#define AV_CONFIG_BASE        0xFF203000
+#define PIXEL_BUF_CTRL_BASE   0xFF203020
+#define CHAR_BUF_CTRL_BASE    0xFF203030
+#define AUDIO_BASE            0xFF203040
+#define VIDEO_IN_BASE         0xFF203060
+#define ADC_BASE              0xFF204000
+
+/* Cyclone V HPS devices */
+#define HPS_GPIO1_BASE        0xFF709000
+#define HPS_TIMER0_BASE       0xFFC08000
+#define HPS_TIMER1_BASE       0xFFC09000
+#define HPS_TIMER2_BASE       0xFFD00000
+#define HPS_TIMER3_BASE       0xFFD01000
+#define FPGA_BRIDGE           0xFFD0501C
+
+/* ARM A9 MPCORE devices */
+#define   PERIPH_BASE         0xFFFEC000    // base address of peripheral devices
+#define   MPCORE_PRIV_TIMER   0xFFFEC600    // PERIPH_BASE + 0x0600
+
+/* Interrupt controller (GIC) CPU interface(s) */
+#define MPCORE_GIC_CPUIF      0xFFFEC100    // PERIPH_BASE + 0x100
+#define ICCICR                0x00          // offset to CPU interface control reg
+#define ICCPMR                0x04          // offset to interrupt priority mask reg
+#define ICCIAR                0x0C          // offset to interrupt acknowledge reg
+#define ICCEOIR               0x10          // offset to end of interrupt reg
+/* Interrupt controller (GIC) distributor interface(s) */
+#define MPCORE_GIC_DIST       0xFFFED000    // PERIPH_BASE + 0x1000
+#define ICDDCR                0x00          // offset to distributor control reg
+#define ICDISER               0x100         // offset to interrupt set-enable regs
+#define ICDICER               0x180         // offset to interrupt clear-enable regs
+#define ICDIPTR               0x800         // offset to interrupt processor targets regs
+#define ICDICFR               0xC00         // offset to interrupt configuration regs
+
+#define		CPU0	    0x01	// bit-mask; bit 0 represents cpu0
+#define		ENABLE		0x1
+#define		SVC_MODE	0b10011
+#define	    KEYS_IRQ	73
+#define	    PS2_IRQ		79
+#define		INT_ENABLE	0b01000000
+
+volatile int pixel_buffer_start; // global variable
+int ps2_byte_1, ps2_byte_2, ps2_byte_3;
+int go=0;
 
 void plot_pixel(int x, int y, short int line_color);
 void clear_screen();
@@ -19,6 +89,20 @@ void v_sync_wait();
 void player1win();
 void player2win();
 
+void PS2_ISR();
+void KEY_ISR();
+
+void HEX(int b1, int b2, int b3);
+
+// Interrupt mode setup.
+void set_A9_IRQ_stack(void);
+void config_GIC(void);
+void enable_A9_interrupts(void);
+void config_KEYs();
+void config_PS2();
+void config_interrupt (int int_ID, int CPU_target);
+void hw_write_bits(volatile int * addr, volatile int unmask, volatile int value);
+
 //Global Players
     int Player1_X=300;
     int Player1_Y=212;
@@ -29,13 +113,20 @@ void player2win();
     int Player2_Y=225;
 	int Money2=0;
 
-   
+   int dice=0;
+   bool reset=false;
     
     
 bool player1=false;
 bool player2=false;
 int main(void)
 {
+    set_A9_IRQ_stack();
+    config_GIC();
+    config_PS2();
+
+    enable_A9_interrupts();
+
     srand(time(NULL));
     //Flags
     short int colour[] = {0x001F, 0x07E0, 0xF800, 0xF81F, 0xFFFF};
@@ -65,7 +156,7 @@ int main(void)
     bool down2=false;
     bool Player2_done=false;
      int turn=0;
-    int dice=0;
+    
     
     int increment=1;
         
@@ -351,30 +442,11 @@ volatile int *pixel_ctrl_ptr = (int *)0xFF203020;
     draw_line(165, 50, 165, 70, 0xFFE0);
     draw_line(155, 40, 165, 50, 0xFFE0);
     draw_line(165, 50, 175, 40, 0xFFE0);
-   
-    
-    
-    
-   
-  
-    
-   
         
-        
-    //Conditions for dice Roll
-    
-   
-	
-     
-
-    
-   
+     //Conditions for dice Roll
    
     //draw_line(319, 0, 0, 239, 0xF81F);   // this line is a pink color
-    while (true){
-          dice=rand()% 3;
-     
-    
+    while(1){
       //Boundaries for Player 1  
        if ((Player1_X<=15) && (Player1_Y==212)){
             up=true; 
@@ -415,6 +487,7 @@ volatile int *pixel_ctrl_ptr = (int *)0xFF203020;
         
       
 	//Player 1
+    if(go==1) {
          if (turn%2==0){
         if (left){
             if (dice==1){
@@ -1114,19 +1187,21 @@ volatile int *pixel_ctrl_ptr = (int *)0xFF203020;
             
         }
         }
-        turn++;
-        
-   //  if ((player1==true) && (player2==true)){
-    //   if (Money1>Money2){
-     //   player1win();
-       //    break;
-      //  }
-      //  else  if (Money2>Money1){
-      //     player2win();   
-       //     break;
-       //   }
-      // }
-      	
+    }
+    turn++;
+    go=0;
+	HEX(Money1, Money2, dice);
+     if ((player1==true) && (player2==true)){
+       if (Money1>Money2){
+        player1win();
+           break;
+        }
+        else  if (Money2>Money1){
+           player2win();   
+            break;
+          }
+       }
+      
        v_sync_wait();
         
     }  
@@ -1500,3 +1575,210 @@ void player2win(){
     
     return;
  }
+
+/*Sample code provided in monitor program*/
+/*Sample code provided in monitor program*/
+void HEX(int b1, int b2, int b3) {
+    volatile int * HEX3_HEX0_ptr = (int *)HEX3_HEX0_BASE;
+    volatile int * HEX5_HEX4_ptr = (int *)HEX5_HEX4_BASE;
+
+    /* SEVEN_SEGMENT_DECODE_TABLE gives the on/off settings for all segments in
+     * a single 7-seg display in the DE2 Media Computer, for the hex digits 0 -
+     * F */
+    unsigned char seven_seg_decode_table[] = {
+        0x3F, 0x06, 0x5B, 0x4F, 0x66, 0x6D, 0x7D, 0x07,
+        0x7F, 0x67, 0x77, 0x7C, 0x39, 0x5E, 0x79, 0x71};
+    unsigned char hex_segs[] = {0, 0, 0, 0, 0, 0, 0, 0};
+    unsigned int  shift_buffer, nibble;
+    unsigned char code;
+    int           i;
+
+    shift_buffer = (b1 << 16) | (b2 << 8) | b3;
+    for (i = 0; i < 6; ++i) {
+        nibble = shift_buffer & 0x0000000F; // character is in rightmost nibble
+        code   = seven_seg_decode_table[nibble];
+        hex_segs[i]  = code;
+        shift_buffer = shift_buffer >> 4;
+    }
+    /* drive the hex displays */
+    *(HEX3_HEX0_ptr) = *(int *)(hex_segs);
+    *(HEX5_HEX4_ptr) = *(int *)(hex_segs + 4);
+}
+
+/*--------------From the DE1-SoC Manual-----------------------*/
+
+// Initialize the banked stack pointer register for IRQ mode
+void set_A9_IRQ_stack(void) {
+    int stack, mode;
+    stack = 0xFFFFFFFF - 7; // top of A9 on-chip memory, aligned to 8 bytes
+    /* change processor to IRQ mode with interrupts disabled */
+    mode = 0b11010010;
+    asm("msr cpsr, %[ps]" : : [ps] "r" (mode));
+    /* set banked stack pointer */
+    asm("mov sp, %[ps]" : : [ps] "r" (stack));
+    /* go back to SVC mode before executing subroutine return! */
+    mode = 0b11010011;
+    asm("msr cpsr, %[ps]" : : [ps] "r" (mode));
+}
+
+// Turn on interrupts in the ARM processor.
+void enable_A9_interrupts(void)
+{
+	int status = SVC_MODE | INT_ENABLE;
+	asm("msr cpsr,%[ps]" : : [ps]"r"(status));
+}
+
+// Configure the Generic Interrupt Controller (GIC).
+void config_GIC(void)
+{
+	int address;	// used to calculate register addresses
+
+	/* enable some examples of interrupts */
+  	config_interrupt (KEYS_IRQ, CPU0);
+  	config_interrupt (PS2_IRQ, CPU0);
+
+  	// Set Interrupt Priority Mask Register (ICCPMR). Enable interrupts for lowest priority 
+	address = MPCORE_GIC_CPUIF + ICCPMR;
+  	*((int *) address) = 0xFFFF;       
+
+  	// Set CPU Interface Control Register (ICCICR). Enable signaling of interrupts
+	address = MPCORE_GIC_CPUIF + ICCICR;
+	*((int *) address) = ENABLE;
+
+	// Configure the Distributor Control Register (ICDDCR) to send pending interrupts to CPUs 
+	address = MPCORE_GIC_DIST + ICDDCR;
+	*((int *) address) = ENABLE;   
+}
+
+/* 
+ * Configure registers in the GIC for individual interrupt IDs.
+*/
+void config_interrupt (int int_ID, int CPU_target)
+{
+	int n, addr_offset, value, address;
+	/* Set Interrupt Processor Targets Register (ICDIPTRn) to cpu0. 
+	 * n = integer_div(int_ID / 4) * 4
+	 * addr_offet = #ICDIPTR + n
+	 * value = CPU_target << ((int_ID & 0x3) * 8)
+	 */
+	n = (int_ID >> 2) << 2;
+	addr_offset = ICDIPTR + n;
+	value = CPU_target << ((int_ID & 0x3) << 3);
+	
+	/* Now that we know the register address and value, we need to set the correct bits in 
+	 * the GIC register, without changing the other bits */
+	address = MPCORE_GIC_DIST + addr_offset;
+	hw_write_bits((int *) address, 0xff << ((int_ID & 0x3) << 3), value);  
+    
+	/* Set Interrupt Set-Enable Registers (ICDISERn). 
+	 * n = (integer_div(in_ID / 32) * 4
+	 * addr_offset = 0x100 + n
+	 * value = enable << (int_ID & 0x1F) */
+	n = (int_ID >> 5) << 2; 
+	addr_offset = ICDISER + n;
+	value = 0x1 << (int_ID & 0x1f);
+	/* Now that we know the register address and value, we need to set the correct bits in 
+	 * the GIC register, without changing the other bits */
+	address = MPCORE_GIC_DIST + addr_offset;
+	hw_write_bits((int *) address, 0x1 << (int_ID & 0x1f), value);    
+}
+
+void hw_write_bits(volatile int * addr, volatile int unmask, volatile int value)
+{     
+    *addr = ((~unmask) & *addr) | value;
+}
+
+// KEYs service routine.
+void KEY_ISR() {
+    ;
+}
+
+void __attribute__ ((interrupt)) __cs3_reset (void)
+{
+    while(1);
+}
+
+void __attribute__ ((interrupt)) __cs3_isr_undef (void)
+{
+    while(1);
+}
+
+void __attribute__ ((interrupt)) __cs3_isr_swi (void)
+{
+    while(1);
+}
+
+void __attribute__ ((interrupt)) __cs3_isr_pabort (void)
+{
+    while(1);
+}
+
+void __attribute__ ((interrupt)) __cs3_isr_dabort (void)
+{
+    while(1);
+}
+
+void __attribute__ ((interrupt)) __cs3_isr_irq (void)
+{
+	// Read the ICCIAR from the processor interface 
+	int address = MPCORE_GIC_CPUIF + ICCIAR; 
+	int int_ID = *((int *) address); 
+   
+	if (int_ID == KEYS_IRQ)	// check if interrupt is from the private timer
+		KEY_ISR();
+	else if (int_ID == PS2_IRQ)				// check if interrupt is from the PS/2
+		PS2_ISR();
+	else
+		while (1);									// if unexpected, then halt
+
+	// Write to the End of Interrupt Register (ICCEOIR)
+	address = MPCORE_GIC_CPUIF + ICCEOIR;
+	*((int *) address) = int_ID;
+
+	return;
+} 
+
+void __attribute__ ((interrupt)) __cs3_isr_fiq (void)
+{
+    while(1);
+}
+
+void config_PS2() {
+    volatile int *PS2_ptr = (int *) 0xFF200100;
+    *(PS2_ptr) = 0xFF; // Reset
+    *(PS2_ptr + 1) = 1;
+}
+
+// setup the KEY interrupts in the FPGA.
+void config_KEYs() {
+    volatile int * KEY_ptr = (int *) 0xFF200050; // pushbutton KEY address
+    *(KEY_ptr + 2) = 0xF; // enable interrupts for all four KEYs
+}
+
+
+// PS2 service routine.
+void PS2_ISR() {
+    volatile int * PS2_ptr = (int *) 0xFF200100; // PS/2 port address
+    int PS2_data, RVALID;
+    
+    PS2_data = *(PS2_ptr); // read the Data register in the PS/2 port
+    RVALID = PS2_data & 0x8000; // extract the RVALID field
+    if (RVALID) {
+        // Save the last three bytes of data.
+        ps2_byte_1 = ps2_byte_2;
+        ps2_byte_2 = ps2_byte_3;
+        ps2_byte_3 = PS2_data & 0xFF;  
+
+        // Process data.
+        if(ps2_byte_2 == 0xF0 && ps2_byte_3 == 0x1C) {
+            dice = (rand()%3) + 1;
+            go = 1;
+        }
+        else if(ps2_byte_2 == 0xF0 && ps2_byte_3 == 0x2D) {
+            reset = true;  // R
+        }
+        else {
+            return;
+        }
+    }
+}
