@@ -1187,10 +1187,11 @@ volatile int *pixel_ctrl_ptr = (int *)0xFF203020;
             
         }
         }
+        turn++;
     }
-    turn++;
+    
     go=0;
-	HEX(Money1, Money2, dice);
+	HEX(Money1, Money2, turn);
      if ((player1==true) && (player2==true)){
        if (Money1>Money2){
         player1win();
