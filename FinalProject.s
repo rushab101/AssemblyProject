@@ -2,8 +2,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-    
+//Pink Tile=+1
+//Red Tile=+2
+//Blue Tile=+3
+//Teal Tile = +5    
 volatile int pixel_buffer_start; // global variable
+
 
 void plot_pixel(int x, int y, short int line_color);
 void clear_screen();
@@ -12,27 +16,36 @@ void updateValue_Player2();
 void draw_line(int x0, int y0, int x1, int y1, short int line_color);
 void swap(int *x, int *y);
 void v_sync_wait();
+void player1win();
+void player2win();
 
 //Global Players
     int Player1_X=300;
     int Player1_Y=212;
 	int Money1=0;
+
     
     int Player2_X=300;
     int Player2_Y=225;
 	int Money2=0;
+
+   
+    
+    
+bool player1=false;
+bool player2=false;
 int main(void)
 {
-    
+    srand(time(NULL));
     //Flags
     
- 
+ 	
     //Rotations for player 1
     bool left=true;
     bool up=false;
     bool right=false;
     bool down=false;
-    bool Player1_done=false;
+    bool gameover=false;
     
     //Rotations for player 2
     bool left2=true;
@@ -41,8 +54,7 @@ int main(void)
     bool down2=false;
     bool Player2_done=false;
     int turn=0; 
-    int dice;
-    dice = ( (rand() % 3) + 1);
+    int dice=0;
     
     int increment=1;
         
@@ -256,7 +268,6 @@ volatile int *pixel_ctrl_ptr = (int *)0xFF203020;
          }
     }
     
-    
     // Start
     //S
    draw_line(140, 175, 150, 175, 0xFFFF);
@@ -340,16 +351,17 @@ volatile int *pixel_ctrl_ptr = (int *)0xFF203020;
     //Conditions for dice Roll
     
     
-    
-    
-      
+
+     
     
    
     
+   
    
     //draw_line(319, 0, 0, 239, 0xF81F);   // this line is a pink color
     while (true){
-       
+      
+    dice= ((rand()% 3) +1);
       //Boundaries for Player 1  
        if ((Player1_X<=15) && (Player1_Y==212)){
             up=true; 
@@ -421,7 +433,7 @@ volatile int *pixel_ctrl_ptr = (int *)0xFF203020;
                     up=true;
                 }
                 else if ((Player1_X >=20)&& (Player1_X<49) && (Player1_Y>209)){ //At the Yellow Tile
-                	Player1_X=Player1_X-30;
+                	Player1_X=Player1_X-25;
                  Player1_Y=Player1_Y-30;    
     	for (int i=Player1_X; i < Player1_X+10; i ++)
         for (int j=Player1_Y; j < Player1_Y+10; j ++)
@@ -451,7 +463,7 @@ volatile int *pixel_ctrl_ptr = (int *)0xFF203020;
                 }
                 
                 else if ((Player1_X >=20)&& (Player1_X<49) && (Player1_Y>209)){ //At the Yellow Tile
-                	Player1_X=Player1_X-30;
+                	Player1_X=Player1_X-20;
                  Player1_Y=Player1_Y-60;    
     	for (int i=Player1_X; i < Player1_X+10; i ++)
         for (int j=Player1_Y; j < Player1_Y+10; j ++)
@@ -461,7 +473,7 @@ volatile int *pixel_ctrl_ptr = (int *)0xFF203020;
                     up=true;
                 }
                 else if ((Player1_X>=49) && (Player1_X<79) && (Player1_Y>209)){  //At the Red Tile
-                 Player1_X=Player1_X-60;
+                 Player1_X=Player1_X-50;
                     Player1_Y=Player1_Y-30; 
                     for (int i=Player1_X; i < Player1_X+10; i ++)
         for (int j=Player1_Y; j < Player1_Y+10; j ++)
@@ -589,7 +601,7 @@ volatile int *pixel_ctrl_ptr = (int *)0xFF203020;
                 
                 
                 else {
-                Player1_X=Player1_X+10;
+                Player1_X=Player1_X+30;
         for (int i=Player1_X; i < Player1_X+10; i ++)
         for (int j=Player1_Y; j < Player1_Y+10; j ++)
         plot_pixel(i,j, 0x07E0); 
@@ -607,7 +619,7 @@ volatile int *pixel_ctrl_ptr = (int *)0xFF203020;
                     down=true;
                 }
                 else if ((Player1_X >=270) && (Player1_X <290) && (Player1_Y <30)) { //At the Yellow tile 
-                 Player1_X=Player1_X+30;
+                 Player1_X=Player1_X+25;
                   Player1_Y=Player1_Y+30;    
                     for (int i=Player1_X; i < Player1_X+10; i ++)
         for (int j=Player1_Y; j < Player1_Y+10; j ++)
@@ -619,7 +631,7 @@ volatile int *pixel_ctrl_ptr = (int *)0xFF203020;
                    
                 
                 else {
-                Player1_X=Player1_X+20;
+                Player1_X=Player1_X+60;
         for (int i=Player1_X; i < Player1_X+10; i ++)
         for (int j=Player1_Y; j < Player1_Y+10; j ++)
         plot_pixel(i,j, 0x07E0);
@@ -637,7 +649,7 @@ volatile int *pixel_ctrl_ptr = (int *)0xFF203020;
                     down=true;
                 }
                 else if ((Player1_X >=270) && (Player1_X <290) && (Player1_Y <30)) { //At the Yellow tile 
-                 Player1_X=Player1_X+30;
+                 Player1_X=Player1_X+25;
                   Player1_Y=Player1_Y+60;    
                     for (int i=Player1_X; i < Player1_X+10; i ++)
         for (int j=Player1_Y; j < Player1_Y+10; j ++)
@@ -647,7 +659,7 @@ volatile int *pixel_ctrl_ptr = (int *)0xFF203020;
                     down=true;
                 }
                 else if ((Player1_X >=240) && (Player1_X <270) && (Player1_Y <30)) { //At the Blue tile 
-                 Player1_X=Player1_X+60;
+                 Player1_X=Player1_X+55;
                   Player1_Y=Player1_Y+30;    
                     for (int i=Player1_X; i < Player1_X+10; i ++)
         for (int j=Player1_Y; j < Player1_Y+10; j ++)
@@ -673,9 +685,10 @@ volatile int *pixel_ctrl_ptr = (int *)0xFF203020;
             if (dice==1) {
                 if ((Player1_Y>=180) && (Player1_Y<210) && (Player1_X>290)){ //At the blue tile
                   down=false; 
+                    player1=true;
                 }
                 else {
-                Player1_Y=Player1_Y+10;  
+                Player1_Y=Player1_Y+30;  
          for (int i=Player1_X; i < Player1_X+10; i ++)
         for (int j=Player1_Y; j < Player1_Y+10; j ++)
         plot_pixel(i,j, 0x07E0);
@@ -684,10 +697,12 @@ volatile int *pixel_ctrl_ptr = (int *)0xFF203020;
             }
              if (dice==2) {
                  if ((Player1_Y>=180) && (Player1_Y<210) && (Player1_X>290)){ //At the blue tile
-                  down=false;   
+                  down=false;
+                     player1=true;
                  }
                  else if ((Player1_Y>=150) && (Player1_Y<180) && (Player1_X>290)){ //At the teal tile
-                  down=false;   
+                  down=false;
+                     player1=true;
                  }
                  
                  else {
@@ -701,12 +716,15 @@ volatile int *pixel_ctrl_ptr = (int *)0xFF203020;
              if (dice==3) {
                  if ((Player1_Y>=180) && (Player1_Y<210) && (Player1_X>290)){ //At the blue tile
                   down=false;   
+                     player1=true;
                  }
                  else if ((Player1_Y>=150) && (Player1_Y<180) && (Player1_X>290)){ //At the teal tile
-                  down=false;   
+                  down=false; 
+                     player1=true;
                  }
                 else if ((Player1_Y>=120) && (Player1_Y<150) && (Player1_X>290)){ //At the pink tile
-                  down=false;   
+                  down=false; 
+                    player1=true;
                  }
                  
                 else { 
@@ -739,7 +757,7 @@ volatile int *pixel_ctrl_ptr = (int *)0xFF203020;
                 
                 
                 else {
-                 Player2_X=Player2_X-10; 
+                 Player2_X=Player2_X-30; 
         for (int i=Player2_X; i < Player2_X+10; i ++)
         for (int j=Player2_Y; j < Player2_Y+10; j ++)
         plot_pixel(i,j, 0xEC64);
@@ -749,7 +767,7 @@ volatile int *pixel_ctrl_ptr = (int *)0xFF203020;
             }
              if (dice==2) {
                   if ((Player2_X<=1) && (Player2_X>31) && (Player2_Y>209)){ //Red Tile
-                 Player2_Y=Player2_Y-60;
+                 Player2_Y=Player2_Y-55;
                     for (int i=Player2_X; i < Player2_X+10; i ++)
         		for (int j=Player2_Y; j < Player2_Y+10; j ++)
         		plot_pixel(i,j, 0xEC64);
@@ -759,7 +777,7 @@ volatile int *pixel_ctrl_ptr = (int *)0xFF203020;
                     
                 }
                  else if ((Player2_X>=20) && (Player2_X<49) && (Player2_Y>209)){ //Yellow Tile
-                 Player2_X=Player2_X-30;
+                 Player2_X=Player2_X-25;
                     Player2_Y=Player2_Y-30;
                     for (int i=Player2_X; i < Player2_X+10; i ++)
         		for (int j=Player2_Y; j < Player2_Y+10; j ++)
@@ -770,7 +788,7 @@ volatile int *pixel_ctrl_ptr = (int *)0xFF203020;
                 }
                
                  else {
-                 Player2_X=Player2_X-60; 
+                 Player2_X=Player2_X-55; 
         for (int i=Player2_X; i < Player2_X+10; i ++)
         for (int j=Player2_Y; j < Player2_Y+10; j ++)
         plot_pixel(i,j, 0xEC64);
@@ -795,7 +813,7 @@ volatile int *pixel_ctrl_ptr = (int *)0xFF203020;
                   else if ((Player2_X>=20) && (Player2_X<49) && (Player2_Y>209)){ //Yellow Tile
                                        
 
-                 Player2_X=Player2_X-30;
+                 Player2_X=Player2_X-25;
                     Player2_Y=Player2_Y-60;
                     for (int i=Player2_X; i < Player2_X+10; i ++)
         		for (int j=Player2_Y; j < Player2_Y+10; j ++)
@@ -806,7 +824,7 @@ volatile int *pixel_ctrl_ptr = (int *)0xFF203020;
                 }
                 
                 else if ((Player2_X>=49) && (Player2_X<79) && (Player2_Y>209)){ //Red Tile
-                 Player2_X=Player2_X-60;
+                 Player2_X=Player2_X-55;
                     Player2_Y=Player2_Y-30;
                     for (int i=Player2_X; i < Player2_X+10; i ++)
         		for (int j=Player2_Y; j < Player2_Y+10; j ++)
@@ -835,12 +853,12 @@ volatile int *pixel_ctrl_ptr = (int *)0xFF203020;
         for (int j=Player2_Y; j < Player2_Y+10; j ++)
         plot_pixel(i,j, 0xEC64); 
                    updateValue_Player2();
-                      up=false;
-                      right=true;
+                      up2=false;
+                      right2=true;
                   }
                       
                 else {
-                Player2_Y=Player2_Y-10;
+                Player2_Y=Player2_Y-30;
         for (int i=Player2_X; i < Player2_X+10; i ++)
         for (int j=Player2_Y; j < Player2_Y+10; j ++)
         plot_pixel(i,j, 0xEC64);
@@ -849,23 +867,23 @@ volatile int *pixel_ctrl_ptr = (int *)0xFF203020;
             }
              if (dice==2){
                  if ((Player2_Y>1) && (Player2_Y<30) && (Player2_X <30)){ //At the teal tile
-                     Player2_Y=Player2_X+30;
+                     Player2_X=Player2_X+30;
         for (int i=Player2_X; i < Player2_X+10; i ++)
         for (int j=Player2_Y; j < Player2_Y+10; j ++)
         plot_pixel(i,j, 0xEC64); 
                    updateValue_Player2();
-                      up=false;
-                      right=true;
+                      up2=false;
+                      right2=true;
                  }
                  else if ((Player2_Y>30) && (Player2_Y<60) && (Player2_X<30)){ //At the pink tile
-                   Player2_Y=Player2_Y-30;
+                   Player2_Y=Player2_Y-35;
                    Player2_X=Player2_X+30;
         for (int i=Player2_X; i < Player2_X+10; i ++)
         for (int j=Player2_Y; j < Player2_Y+10; j ++)
         plot_pixel(i,j, 0xEC64); 
                    updateValue_Player2();
-                      up=false;
-                      right=true; 
+                      up2=false;
+                      right2=true; 
                  }
                  
                  else {
@@ -883,8 +901,8 @@ volatile int *pixel_ctrl_ptr = (int *)0xFF203020;
         for (int j=Player2_Y; j < Player2_Y+10; j ++)
         plot_pixel(i,j, 0xEC64); 
                    updateValue_Player2();
-                      up=false;
-                      right=true;
+                      up2=false;
+                      right2=true;
                   }
                  else if ((Player2_Y>30) && (Player2_Y<60) && (Player2_X<30)){ //At the pink tile
                    Player2_Y=Player2_Y-30;
@@ -893,8 +911,8 @@ volatile int *pixel_ctrl_ptr = (int *)0xFF203020;
         for (int j=Player2_Y; j < Player2_Y+10; j ++)
         plot_pixel(i,j, 0xEC64); 
                    updateValue_Player2();
-                      up=false;
-                      right=true; 
+                      up2=false;
+                      right2=true; 
                  }
                else if ((Player2_Y>60) && (Player2_Y<90) && (Player2_X<30)) {  //Red Tile
                    Player2_Y=Player2_Y-60;
@@ -903,12 +921,10 @@ volatile int *pixel_ctrl_ptr = (int *)0xFF203020;
         for (int j=Player2_Y; j < Player2_Y+10; j ++)
         plot_pixel(i,j, 0xEC64); 
                    updateValue_Player2();
-                      up=false;
-                      right=true; 
+                      up2=false;
+                      right2=true; 
        
-               }
-                 
-                 
+               } 
            else {      
                 Player2_Y=Player2_Y-90;
         for (int i=Player2_X; i < Player2_X+10; i ++)
@@ -922,21 +938,84 @@ volatile int *pixel_ctrl_ptr = (int *)0xFF203020;
         }
         if (right2){
             if (dice==1){
-                 Player2_X=Player2_X+10; 
+                if ((Player2_X >=290) && (Player2_X <320) && (Player2_Y <30)) { //At the blue tile
+                 Player2_Y=Player2_Y+90;    
+                    for (int i=Player1_X; i < Player1_X+10; i ++)
+        for (int j=Player2_Y; j < Player2_Y+10; j ++)
+        plot_pixel(i,j, 0x07E0);
+                 updateValue_Player2();
+                    right2=false;
+                    down2=true;
+                }
+                
+                else {
+                 Player2_X=Player2_X+30; 
         for (int i=Player2_X; i < Player2_X+10; i ++)
         for (int j=Player2_Y; j < Player2_Y+10; j ++)
         plot_pixel(i,j, 0xEC64);
                  updateValue_Player2();
+                }
             }
              if (dice==2){
-                 Player2_X=Player2_X+20; 
+                 if ((Player2_X >=290) && (Player2_X <320) && (Player2_Y <30)) { //At the blue tile
+                 Player2_Y=Player2_Y+60;    
+                    for (int i=Player1_X; i < Player1_X+10; i ++)
+        for (int j=Player2_Y; j < Player2_Y+10; j ++)
+        plot_pixel(i,j, 0xEC64);
+                 updateValue_Player2();
+                    right2=false;
+                    down2=true;
+                }
+                 else if ((Player2_X >=270) && (Player2_X <290) && (Player2_Y <30)) { //At the Yellow tile 
+                 Player2_X=Player2_X+25;
+                  Player2_Y=Player2_Y+30;    
+                    for (int i=Player2_X; i < Player2_X+10; i ++)
+        for (int j=Player2_Y; j < Player2_Y+10; j ++)
+        plot_pixel(i,j, 0xEC64);
+                 updateValue_Player2();
+                    right2=false;
+                    down2=true;
+                }
+                 
+                 else {
+                 Player2_X=Player2_X+60; 
         for (int i=Player2_X; i < Player2_X+10; i ++)
         for (int j=Player2_Y; j < Player2_Y+10; j ++)
         plot_pixel(i,j, 0xEC64);
                   updateValue_Player2();
+                 }
             }
              if (dice==3){
-                 Player2_X=Player2_X+30; 
+                 if ((Player2_X >=290) && (Player2_X <320) && (Player2_Y <30)) { //At the blue tile
+                 Player2_Y=Player2_Y+90;    
+                    for (int i=Player1_X; i < Player1_X+10; i ++)
+        for (int j=Player2_Y; j < Player2_Y+10; j ++)
+        plot_pixel(i,j, 0x07E0);
+                 updateValue_Player2();
+                    right2=false;
+                    down2=true;
+                }
+                else if ((Player2_X >=270) && (Player2_X <290) && (Player2_Y <30)) { //At the Yellow tile 
+                 Player2_X=Player2_X+25;
+                  Player2_Y=Player2_Y+60;    
+                    for (int i=Player2_X; i < Player2_X+10; i ++)
+        for (int j=Player2_Y; j < Player2_Y+10; j ++)
+        plot_pixel(i,j, 0x07E0);
+                 updateValue_Player2();
+                    right2=false;
+                    down2=true;
+                }
+                else if ((Player2_X >=240) && (Player2_X <270) && (Player2_Y <30)) { //At the Blue tile 
+                 Player2_X=Player2_X+55;
+                  Player2_Y=Player2_Y+30;    
+                    for (int i=Player2_X; i < Player2_X+10; i ++)
+        for (int j=Player2_Y; j < Player2_Y+10; j ++)
+        plot_pixel(i,j, 0x07E0);
+                 updateValue_Player2();
+                    right2=false;
+                    down2=true;
+                }
+                 Player2_X=Player2_X+90; 
         for (int i=Player2_X; i < Player2_X+10; i ++)
         for (int j=Player2_Y; j < Player2_Y+10; j ++)
         plot_pixel(i,j, 0xEC64);
@@ -946,25 +1025,57 @@ volatile int *pixel_ctrl_ptr = (int *)0xFF203020;
         }
         if (down2){
             if (dice==1){
-                 Player2_Y=Player2_Y+10;  
-        for (int i=Player2_X; i < Player2_X+10; i ++)
-        for (int j=Player2_Y; j < Player2_Y+10; j ++)
-        plot_pixel(i,j, 0xEC64);
-                 updateValue_Player2();
-            }
-            if (dice==2){
-                 Player2_Y=Player2_Y+20;  
-        for (int i=Player2_X; i < Player2_X+10; i ++)
-        for (int j=Player2_Y; j < Player2_Y+10; j ++)
-        plot_pixel(i,j, 0xEC64); 
-                 updateValue_Player2();
-                
-            }
-            if (dice==3){
+                if ((Player2_Y>=180) && (Player2_Y<210) && (Player2_X>290)){ //At the blue tile
+                  down2=false; 
+                    player2=true;
+                 }
+                else {
                  Player2_Y=Player2_Y+30;  
         for (int i=Player2_X; i < Player2_X+10; i ++)
         for (int j=Player2_Y; j < Player2_Y+10; j ++)
         plot_pixel(i,j, 0xEC64);
+                 updateValue_Player2();
+                }
+            }
+            if (dice==2){
+                if ((Player2_Y>=180) && (Player2_Y<210) && (Player2_X>290)){ //At the blue tile
+                  down2=false;
+                    player2=true;
+                 }
+                else if ((Player2_Y>=150) && (Player2_Y<180) && (Player2_X>290)){ //At the teal tile
+                  down2=false; 
+                    player2=true;
+                 }
+                else {
+                 Player2_Y=Player2_Y+60;  
+        for (int i=Player2_X; i < Player2_X+10; i ++)
+        for (int j=Player2_Y; j < Player2_Y+10; j ++)
+        plot_pixel(i,j, 0xEC64); 
+                 updateValue_Player2();
+                }
+                
+            }
+            if (dice==3){
+                 if ((Player2_Y>=180) && (Player2_Y<210) && (Player2_X>290)){ //At the blue tile
+                  down2=false; 
+                     player2=true;
+                     
+                 }
+                 else if ((Player2_Y>=150) && (Player2_Y<180) && (Player2_X>290)){ //At the teal tile
+                  down2=false; 
+                     player2=true;
+                 }
+                else if ((Player2_Y>=120) && (Player2_Y<150) && (Player2_X>290)){ //At the pink tile
+                  down2=false; 
+                    player2=true;
+                 }
+                
+                else {
+                 Player2_Y=Player2_Y+90;  
+        for (int i=Player2_X; i < Player2_X+10; i ++)
+        for (int j=Player2_Y; j < Player2_Y+10; j ++)
+        plot_pixel(i,j, 0xEC64);
+                }
                  updateValue_Player2();
             }
             
@@ -972,7 +1083,16 @@ volatile int *pixel_ctrl_ptr = (int *)0xFF203020;
         }
         turn++;
         
-       
+//       if ((player1==true) && (player2==true)){
+//       if (Money1>Money2){
+//        player1win();
+//           break;
+//        }
+//        else  if (Money2>Money1){
+//           player2win();   
+//            break;
+//          }
+//       }
       	
        v_sync_wait();
         
@@ -1058,58 +1178,58 @@ void updateValue_Player1(){
     if (((Player1_X<289) && (Player1_X>=259)) && (Player1_Y==212)) //Blue Tile
         Money1=Money1 +3;
     else if (((Player1_X<259) && (Player1_X>=229)) && (Player1_Y==212)) //Red Tile
-        Money1=Money1-3;
+        Money1=Money1+2;
     else if (((Player1_X<229) && (Player1_X>=199)) && (Player1_Y==212)) //Teal Tile
     	Money1=Money1 +5;
 	else if (((Player1_X<199)  && (Player1_X>=169)) && (Player1_Y==212)) //Blue Tile
         Money1=Money1+3;
     else if (((Player1_X<169) && (Player1_X>=139)) && (Player1_Y==212)) //Red Tile
-        Money1=Money1-3;
+        Money1=Money1+2;
       else if (((Player1_X<139) && (Player1_X>=109)) && (Player1_Y==212)) //Pink Tile
-        Money1=Money1-5;
+        Money1=Money1+1;
     else if (((Player1_X<109)  && (Player1_X>=79)) && (Player1_Y==212)) //Blue Tile
         Money1=Money1+3;
     else if (((Player1_X<79) && (Player1_X>=49)) && (Player1_Y==212)) //Red Tile
-        Money1=Money1-3;
+        Money1=Money1+2;
     else if (((Player1_X<31)&& (Player1_X>=1)) && (Player1_Y==212)) // Red Tile
-        Money1=Money1-3;
+        Money1=Money1+2;
     
     //For Player 1 Left Side
     
     if (((Player1_Y>=1) && (Player1_Y<30)) && (Player1_X==15)) //Teal Tile
         Money1=Money1+5;
      else if (((Player1_Y>=30) && (Player1_Y<60)) && (Player1_X==15))  //Pink Tile
-        Money1=Money1-5;
+        Money1=Money1+1;
      else if (((Player1_Y>=60) && (Player1_Y<90)) && (Player1_X==15))  //Red Tile
-        Money1=Money1-3; 
+        Money1=Money1+2; 
       else if (((Player1_Y>=90) && (Player1_Y<120)) && (Player1_X==15))  //Blue Tile
         Money1=Money1+3; 
       else if (((Player1_Y>=120) && (Player1_Y<150)) && (Player1_X==15))  //Red Tile
-        Money1=Money1+3;  
+        Money1=Money1+2;  
        else if (((Player1_Y>=150) && (Player1_Y<180)) && (Player1_X==15))  //Pink Tile
-        Money1=Money1-5;
+        Money1=Money1+1;
       else if (((Player1_Y>=180) && (Player1_Y<210)) && (Player1_X==15))  //Blue Tile
         Money1=Money1+3;  
     
     //For Player 1 Top Side
     if (((Player1_X>=30) && (Player1_X<60)) && ((Player1_Y>=1) && (Player1_Y<=30))) //Red Tile 
-        Money1=Money1-3;
+        Money1=Money1+2;
     else  if (((Player1_X>=60) && (Player1_X<90)) && ((Player1_Y>=1) && (Player1_Y<=30))) //Blue Tile 
         Money1=Money1+3;
      else  if (((Player1_X>=90) && (Player1_X<120)) && ((Player1_Y>=1) && (Player1_Y<=30))) //Red Tile 
-        Money1=Money1-3;
+        Money1=Money1+2;
      else  if (((Player1_X>=120) && (Player1_X<150)) && ((Player1_Y>=1) && (Player1_Y<=30))) //Pink Tile 
-        Money1=Money1-5;
+        Money1=Money1+1;
     else  if (((Player1_X>=150) && (Player1_X<180)) && ((Player1_Y>=1) && (Player1_Y<=30))) //Red Tile 
-        Money1=Money1-3;
+        Money1=Money1+2;
     else  if (((Player1_X>=180) && (Player1_X<210)) && ((Player1_Y>=1) && (Player1_Y<=30))) //Pink Tile 
-        Money1=Money1-5;
+        Money1=Money1+1;
     else  if (((Player1_X>=210) && (Player1_X<240)) && ((Player1_Y>=1) && (Player1_Y<=30))) //Red Tile 
-        Money1=Money1-3;
+        Money1=Money1+2;
     else  if (((Player1_X>=240) && (Player1_X<270)) && ((Player1_Y>=1) && (Player1_Y<=30))) //Blue Tile 
         Money1=Money1+3;
     else  if (((Player1_X>=290) && (Player1_X<320)) && ((Player1_Y>=1) && (Player1_Y<=30))) //Pink Tile 
-        Money1=Money1+5;
+        Money1=Money1+1;
     
     //For Player 1 Right Side 
    
@@ -1118,9 +1238,9 @@ void updateValue_Player1(){
         else if (((Player1_Y>=60) && (Player1_Y<90)) && ((Player1_X>=290) && (Player1_X<=319))) //Blue Tile
             Money1=Money1+3;
      	else if (((Player1_Y>=90) && (Player1_Y<120)) && ((Player1_X>=290) && (Player1_X<=319))) //Red Tile
-            Money1=Money1-3; 
+            Money1=Money1+2; 
     	 else if (((Player1_Y>=120) && (Player1_Y<150)) && ((Player1_X>=290) && (Player1_X<=319))) //Pink Tile
-            Money1=Money1-5;    
+            Money1=Money1+1;    
      	else if (((Player1_Y>=150) && (Player1_Y<180)) && ((Player1_X>=290) && (Player1_X<=319))) //Teal Tile
             Money1=Money1+5;
      	else if (((Player1_Y>=180) && (Player1_Y<210)) && ((Player1_X>=290) && (Player1_X<=319))) //Blue Tile
@@ -1132,58 +1252,58 @@ void updateValue_Player2(){
     if (((Player2_X<289) && (Player2_X>=259)) && (Player2_Y==225)) //Blue Tile
         Money2=Money2 +3;
     else if (((Player2_X<259) && (Player2_X>=229)) && (Player2_Y==225)) //Red Tile
-        Money2=Money2-3;
+        Money2=Money2+2;
     else if (((Player2_X<229) && (Player2_X>=199)) && (Player2_Y==225)) //Teal Tile
     	Money2=Money2 +5;
 	else if (((Player2_X<199)  && (Player2_X>=169)) && (Player2_Y==225)) //Blue Tile
         Money2=Money2+3;
     else if (((Player2_X<169) && (Player2_X>=139)) && (Player2_Y==225)) //Red Tile
-        Money2=Money2-3;
+        Money2=Money2+2;
       else if (((Player2_X<139) && (Player2_X>=109)) && (Player2_Y==225)) //Pink Tile
-        Money2=Money2-5;
+        Money2=Money2+1;
     else if (((Player2_X<109)  && (Player2_X>=79)) && (Player2_Y==225)) //Blue Tile
         Money2=Money2+3;
     else if (((Player2_X<79) && (Player2_X>=49)) && (Player2_Y==225)) //Red Tile
-        Money2=Money2-3;
+        Money2=Money2+2;
     else if (((Player2_X<31)&& (Player2_X>=1)) && (Player2_Y==225)) // Red Tile
-        Money2=Money2-3;
+        Money2=Money2+2;
     
     //For Player 2 Left Side
     
     if (((Player2_Y>=1) && (Player2_Y<30)) && (Player2_X==15)) //Teal Tile
         Money2=Money2+5;
      else if (((Player2_Y>=30) && (Player2_Y<60)) && (Player2_X==15))  //Pink Tile
-        Money2=Money2-5;
+        Money2=Money2+1;
      else if (((Player2_Y>=60) && (Player2_Y<90)) && (Player2_X==15))  //Red Tile
-        Money2=Money2-3; 
+        Money2=Money2+2; 
       else if (((Player2_Y>=90) && (Player2_Y<120)) && (Player2_X==15))  //Blue Tile
         Money2=Money2+3; 
       else if (((Player2_Y>=120) && (Player2_Y<150)) && (Player2_X==15))  //Red Tile
-        Money2=Money2+3;  
+        Money2=Money2+2;  
        else if (((Player2_Y>=150) && (Player2_Y<180)) && (Player2_X==15))  //Pink Tile
-        Money2=Money2-5;
+        Money2=Money2+1;
       else if (((Player2_Y>=180) && (Player2_Y<210)) && (Player2_X==15))  //Blue Tile
         Money2=Money2+3;   
     
     //For Player 2 Top Side
     if (((Player2_X>=30) && (Player2_X<60)) && ((Player2_Y>=1) && (Player2_Y<=30))) //Red Tile 
-        Money2=Money2-3;
+        Money2=Money2+2;
     else  if (((Player2_X>=60) && (Player2_X<90)) && ((Player2_Y>=1) && (Player2_Y<=30))) //Blue Tile 
         Money2=Money2+3;
      else  if (((Player2_X>=90) && (Player2_X<120)) && ((Player2_Y>=1) && (Player2_Y<=30))) //Red Tile 
-        Money2=Money2-3;
+        Money2=Money2+2;
      else  if (((Player2_X>=120) && (Player2_X<150)) && ((Player2_Y>=1) && (Player2_Y<=30))) //Pink Tile 
-        Money2=Money2-5;
+        Money2=Money2+1;
     else  if (((Player2_X>=150) && (Player2_X<180)) && ((Player2_Y>=1) && (Player2_Y<=30))) //Red Tile 
-        Money2=Money2-3;
+        Money2=Money2+2;
     else  if (((Player2_X>=180) && (Player2_X<210)) && ((Player2_Y>=1) && (Player2_Y<=30))) //Pink Tile 
-        Money2=Money2-5;
+        Money2=Money2+1;
     else  if (((Player2_X>=210) && (Player2_X<240)) && ((Player2_Y>=1) && (Player2_Y<=30))) //Red Tile 
-        Money2=Money2-3;
+        Money2=Money2+2;
     else  if (((Player2_X>=240) && (Player2_X<270)) && ((Player2_Y>=1) && (Player2_Y<=30))) //Blue Tile 
         Money2=Money2+3;
     else  if (((Player2_X>=290) && (Player2_X<320)) && ((Player2_Y>=1) && (Player2_Y<=30))) //Pink Tile 
-        Money2=Money2+5;
+        Money2=Money2+1;
      
     //For Player 2 Right Side 
    
@@ -1192,11 +1312,158 @@ void updateValue_Player2(){
         else if (((Player2_Y>=60) && (Player2_Y<90)) && ((Player2_X>=290) && (Player2_X<=319))) //Blue Tile
             Money2=Money2+3;
      	else if (((Player2_Y>=90) && (Player2_Y<120)) && ((Player2_X>=290) && (Player2_X<=319))) //Red Tile
-            Money2=Money2-3; 
+            Money2=Money2+2; 
     	 else if (((Player2_Y>=120) && (Player2_Y<150)) && ((Player2_X>=290) && (Player2_X<=319))) //Pink Tile
-            Money2=Money2-5;    
+            Money2=Money2+1;    
      	else if (((Player2_Y>=150) && (Player2_Y<180)) && ((Player2_X>=290) && (Player2_X<=319))) //Teal Tile
             Money2=Money2+5;
      	else if (((Player2_Y>=180) && (Player2_Y<210)) && ((Player2_X>=290) && (Player2_X<=319))) //Blue Tile
             Money2=Money2+3;    
 }
+void player1win(){
+    clear_screen();
+     for (int i=0; i <320 ; i++ )
+        for (int j=0; j <240 ; j++)
+            plot_pixel (i,j, 0xEC64);
+    
+         for (int i=135; i <210 ; i++ )
+        for (int j=75; j <150 ; j++)
+            plot_pixel (i,j, 0x07E0);
+        
+             for (int i=95 ; i <98 ; i++ )
+                 for (int j=155; j <158; j++)
+                     for (int k=125; k<128; k++) 
+                         for (int l=195; l <198; l++)
+             draw_line(i,j,k,l,0x07E0);
+
+               for (int i=125 ; i <128 ; i++ )
+                 for (int j=195; j <198; j++)
+                     for (int k=135; k<138; k++) 
+                         for (int l=185; l <188; l++)
+             draw_line(i,j,k,l,0x07E0);
+             
+          
+             
+            for (int i=135 ; i <138 ; i++ )
+                 for (int j=185; j <188; j++)
+                     for (int k=145; k<148; k++) 
+                         for (int l=195; l <198; l++)
+             draw_line(i,j,k,l,0x07E0);
+
+             for (int i=145 ; i <148 ; i++ )
+                 for (int j=195; j <198; j++)
+                     for (int k=175; k<178; k++) 
+                         for (int l=155; l <158; l++)
+             draw_line(i,j,k,l,0x07E0);
+
+             for (int i=185 ; i <188 ; i++ )
+             draw_line(i,155,i,198,0x07E0);
+             
+    	for (int i=185 ; i <188 ; i++ )
+             draw_line(i,155,i,198,0x07E0);
+
+        for (int i=193 ; i < 196; i++)
+             draw_line(i,155,i,198,0x07E0);
+    
+      for (int i=233 ; i < 236; i++)
+             draw_line(i,155,i,198,0x07E0);
+    
+    	for (int i=193 ; i <196 ; i++ )
+                 for (int j=155; j <158; j++)
+                     for (int k=233; k<236; k++) 
+                         for (int l=198; l <201; l++)
+             draw_line(i,j,k,l,0x07E0);
+    
+    for (int i=150 ; i < 153; i++)
+             draw_line(i,85,i,105,0xFFFF);
+    
+    
+    for (int i=195 ; i < 198; i++)
+             draw_line(i,85,i,105,0xFFFF);
+    
+        for (int i=195 ; i < 198; i++)
+             draw_line(i,125,i,135,0xFFFF);
+     for (int i=135 ; i < 138; i++)
+             draw_line(150,i,196,i,0xFFFF);
+    for (int i=150 ; i < 153; i++)
+             draw_line(i,125,i,135,0xFFFF);
+     for (int i=173 ; i < 176; i++)
+             draw_line(i,105,i,115,0xFFFF);
+   
+    return;
+    
+}
+
+void player2win(){
+     clear_screen();
+     for (int i=0; i <320 ; i++ )
+        for (int j=0; j <240 ; j++)
+            plot_pixel (i,j, 0x07FF);
+    
+         for (int i=135; i <210 ; i++ )
+        for (int j=75; j <150 ; j++)
+            plot_pixel (i,j, 0xEC64);
+        
+             for (int i=95 ; i <98 ; i++ )
+                 for (int j=155; j <158; j++)
+                     for (int k=125; k<128; k++) 
+                         for (int l=195; l <198; l++)
+             draw_line(i,j,k,l,0xEC64);
+
+               for (int i=125 ; i <128 ; i++ )
+                 for (int j=195; j <198; j++)
+                     for (int k=135; k<138; k++) 
+                         for (int l=185; l <188; l++)
+             draw_line(i,j,k,l,0xEC64);
+             
+          
+             
+            for (int i=135 ; i <138 ; i++ )
+                 for (int j=185; j <188; j++)
+                     for (int k=145; k<148; k++) 
+                         for (int l=195; l <198; l++)
+             draw_line(i,j,k,l,0xEC64);
+
+             for (int i=145 ; i <148 ; i++ )
+                 for (int j=195; j <198; j++)
+                     for (int k=175; k<178; k++) 
+                         for (int l=155; l <158; l++)
+             draw_line(i,j,k,l,0xEC64);
+
+             for (int i=185 ; i <188 ; i++ )
+             draw_line(i,155,i,198,0xEC64);
+             
+    	for (int i=185 ; i <188 ; i++ )
+             draw_line(i,155,i,198,0xEC64);
+
+        for (int i=193 ; i < 196; i++)
+             draw_line(i,155,i,198,0xEC64);
+    
+      for (int i=233 ; i < 236; i++)
+             draw_line(i,155,i,198,0xEC64);
+    
+    	for (int i=193 ; i <196 ; i++ )
+                 for (int j=155; j <158; j++)
+                     for (int k=233; k<236; k++) 
+                         for (int l=198; l <201; l++)
+             draw_line(i,j,k,l,0xEC64);
+    
+    for (int i=150 ; i < 153; i++)
+             draw_line(i,85,i,105,0xFFFF);
+    
+    
+    for (int i=195 ; i < 198; i++)
+             draw_line(i,85,i,105,0xFFFF);
+    
+        for (int i=195 ; i < 198; i++)
+             draw_line(i,125,i,135,0xFFFF);
+     for (int i=135 ; i < 138; i++)
+             draw_line(150,i,196,i,0xFFFF);
+    for (int i=150 ; i < 153; i++)
+             draw_line(i,125,i,135,0xFFFF);
+     for (int i=173 ; i < 176; i++)
+             draw_line(i,105,i,115,0xFFFF);
+    
+    
+    return;
+ }
