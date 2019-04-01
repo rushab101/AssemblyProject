@@ -1724,7 +1724,14 @@ void player2win(){
 void HEX(int b1, int b2, int b3) {
     volatile int * HEX3_HEX0_ptr = (int *)HEX3_HEX0_BASE;
     volatile int * HEX5_HEX4_ptr = (int *)HEX5_HEX4_BASE;
-
+	int ones_place_green=b1%10;
+    int tens_place_green=b1/10;
+    
+    int ones_place_orange=b2%10;
+    int tens_place_orange=b2/10;
+    
+    
+    
     /* SEVEN_SEGMENT_DECODE_TABLE gives the on/off settings for all segments in
      * a single 7-seg display in the DE2 Media Computer, for the hex digits 0 -
      * F */
@@ -1736,7 +1743,7 @@ void HEX(int b1, int b2, int b3) {
     unsigned char code;
     int           i;
 
-    shift_buffer = (b1 << 16) | (b2 << 8) | b3;
+    shift_buffer = (tens_place_green << 20) | (ones_place_green << 16) |(tens_place_orange << 12) | (ones_place_orange << 8) |b3;
     for (i = 0; i < 6; ++i) {
         nibble = shift_buffer & 0x0000000F; // character is in rightmost nibble
         code   = seven_seg_decode_table[nibble];
