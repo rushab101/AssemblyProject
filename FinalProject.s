@@ -88,7 +88,7 @@ void swap(int *x, int *y);
 void v_sync_wait();
 void player1win();
 void player2win();
-
+//extern short MYIMAGE [240][320];  //Remove this later
 void PS2_ISR();
 void KEY_ISR();
 
@@ -100,6 +100,7 @@ void config_GIC(void);
 void enable_A9_interrupts(void);
 void config_KEYs();
 void config_PS2();
+void intro_screen();
 void config_interrupt (int int_ID, int CPU_target);
 void hw_write_bits(volatile int * addr, volatile int unmask, volatile int value);
 
@@ -114,13 +115,21 @@ void hw_write_bits(volatile int * addr, volatile int unmask, volatile int value)
 	int Money2=0;
 
    int dice=0;
-   bool reset=false;
+   bool start=false;
     
     
 bool player1=false;
 bool player2=false;
 int main(void)
 {
+//	volatile short * pixelbuf = 0xc8000000;  //Remove this
+//int i, j;
+  //  for (i=0; i<240; i++)
+    //    for (j=0; j<320; j++)
+     //   *(pixelbuf + (j<<0) + (i<<9)) = MYIMAGE[i][j];
+   
+ //Until Here
+	
     set_A9_IRQ_stack();
     config_GIC();
     config_PS2();
@@ -164,11 +173,48 @@ int main(void)
 volatile int *pixel_ctrl_ptr = (int *)0xFF203020;
     /* Read location of the pixel buffer from the pixel buffer controller */
     pixel_buffer_start = *pixel_ctrl_ptr;
-	
+    clear_screen();
+	while(1){
 	//Drawing the board
     
-    clear_screen();
+    //NOPOLY
+    //N
+    draw_line(80, 40, 80, 70, 0xF800);
+    draw_line(90, 40, 90, 70, 0xF800);
+    draw_line(80, 40, 90, 70, 0xF800);
+    //O
+    draw_line(95, 40, 105, 40, 0x001F);
+    draw_line(95, 40, 95, 70, 0x001F);
+    draw_line(105, 40, 105, 70, 0x001F);
+    draw_line(95, 70, 106, 70, 0x001F);
+    //P
     
+    draw_line(110, 40, 110, 70, 0xF81F);
+    draw_line(110, 40, 125, 40, 0xF81F);
+    draw_line(125, 40, 125, 55, 0xF81F);
+    draw_line(110, 55, 125, 55, 0xF81F);
+    //O
+    draw_line(130, 40, 140, 40, 0x001F);
+    draw_line(130, 40, 130, 70, 0x001F);
+    draw_line(140, 40, 140, 70, 0x001F);
+    draw_line(130, 70, 141, 70, 0x001F);
+    //L
+    draw_line(145, 40, 145, 70, 0x07FF);
+    draw_line(145, 70, 155, 70, 0x07FF);
+    //Y
+    draw_line(165, 50, 165, 70, 0xFFE0);
+    draw_line(155, 40, 165, 50, 0xFFE0);
+    draw_line(165, 50, 175, 40, 0xFFE0);
+     if (start)
+        break;
+    v_sync_wait();
+   
+	}
+    
+ 
+    if(start){
+    clear_screen();
+   
      
     
     //Outer Borders
@@ -1102,8 +1148,17 @@ volatile int *pixel_ctrl_ptr = (int *)0xFF203020;
                     up2=true;
                     
                 }
+                else if ((Player2_X>=20) && (Player2_X<49) && (Player2_Y>209)){ //Yellow Tile
+                 Player2_X=Player2_X-25;
+                    
+                    for (int i=Player2_X; i < Player2_X+10; i ++)
+        		for (int j=Player2_Y; j < Player2_Y+10; j ++)
+        		plot_pixel(i,j, 0xEC64);
+                 updateValue_Player2();
+                 left2=false;
+                    up2=true;
                 
-                
+                }
                 
                 else {
                  Player2_X=Player2_X-30; 
@@ -1213,8 +1268,62 @@ volatile int *pixel_ctrl_ptr = (int *)0xFF203020;
     }
     if (go==1){    
     turn++;
+        if (dice==1){
+            for(int i = 82; i < 200; i++) 
+        for(int j = 92; j < 156; j++) 
+            plot_pixel(i, j, 0x0000);
+          draw_line( 80,  90, 210, 90, colour[changecolour]);
+          draw_line( 80,  160, 210, 160,colour[changecolour]); 
+          draw_line( 80,  90, 80, 160,colour[changecolour]); 
+          draw_line( 210, 90, 210, 160,colour[changecolour]); 
+            for (int i=140; i <150 ; i++ )
+        for (int j=95; j <155 ; j++)
+            plot_pixel (i,j, colour[changecolour]);
+            
+        }
+       else if (dice==2){
+           for(int i = 82; i < 200; i++) 
+        for(int j = 92; j < 156; j++) 
+            plot_pixel(i, j, 0x0000);
+             draw_line( 80,  90, 210, 90, colour[changecolour]);
+          draw_line( 80,  160, 210, 160,colour[changecolour]); 
+          draw_line( 80,  90, 80, 160,colour[changecolour]); 
+          draw_line( 210, 90, 210, 160,colour[changecolour]); 
+            for (int i=90; i <100 ; i++ )
+        for (int j=95; j <155 ; j++)
+            plot_pixel (i,j, colour[changecolour]);
+           
+            for (int i=140; i <150 ; i++ )
+        for (int j=95; j <155 ; j++)
+            plot_pixel (i,j, colour[changecolour]);
+            
+        } else if (dice==3){
+           for(int i = 82; i < 200; i++) 
+        for(int j = 92; j < 156; j++) 
+            plot_pixel(i, j, 0x0000);
+             draw_line( 80,  90, 210, 90, colour[changecolour]);
+          draw_line( 80,  160, 210, 160,colour[changecolour]); 
+          draw_line( 80,  90, 80, 160,colour[changecolour]); 
+          draw_line( 210, 90, 210, 160,colour[changecolour]); 
+            for (int i=90; i <100 ; i++ )
+        for (int j=95; j <155 ; j++)
+            plot_pixel (i,j, colour[changecolour]);
+           
+            for (int i=140; i <150 ; i++ )
+        for (int j=95; j <155 ; j++)
+            plot_pixel (i,j, colour[changecolour]);
+           
+            for (int i=190; i <200 ; i++ )
+        for (int j=95; j <155 ; j++)
+            plot_pixel (i,j, colour[changecolour]);
+           
+           
+       }
     }
     go=0;
+        
+       
+        
 	HEX(Money1, Money2, dice);
      if ((player1==true) && (player2==true)){
        if (Money1>Money2){
@@ -1230,6 +1339,7 @@ volatile int *pixel_ctrl_ptr = (int *)0xFF203020;
        v_sync_wait();
        
     }  
+    }
 }
 
 
@@ -1808,10 +1918,12 @@ void PS2_ISR() {
             go = 1;
         }
         else if(ps2_byte_2 == 0xF0 && ps2_byte_3 == 0x2D) {
-            reset = true;  // R
+           start = true;  // R 
         }
         else {
+         
             return;
         }
     }
 }
+
