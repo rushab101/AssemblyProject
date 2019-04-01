@@ -1351,8 +1351,10 @@ void updateValue_Player1(){
         Money1=Money1+2;
     else  if (((Player1_X>=240) && (Player1_X<270)) && ((Player1_Y>=1) && (Player1_Y<=30))) //Blue Tile 
         Money1=Money1+3;
-    else  if (((Player1_X>=290) && (Player1_X<320)) && ((Player1_Y>=1) && (Player1_Y<=30))) //Pink Tile 
-        Money1=Money1+1;
+    else  if (((Player1_X>=270) && (Player1_X<290)) && ((Player1_Y>=1) && (Player1_Y<=30))) //Yellow Tile 
+        Money1=Money1+0;
+    else  if (((Player1_X>=290) && (Player1_X<320)) && ((Player1_Y>=1) && (Player1_Y<=30))) //Blue Tile 
+        Money1=Money1+3;
     
     //For Player 1 Right Side 
    
@@ -1427,8 +1429,10 @@ void updateValue_Player2(){
         Money2=Money2+2;
     else  if (((Player2_X>=240) && (Player2_X<270)) && ((Player2_Y>=1) && (Player2_Y<=30))) //Blue Tile 
         Money2=Money2+3;
-    else  if (((Player2_X>=290) && (Player2_X<320)) && ((Player2_Y>=1) && (Player2_Y<=30))) //Pink Tile 
-        Money2=Money2+1;
+    else  if (((Player2_X>=270) && (Player2_X<290)) && ((Player2_Y>=1) && (Player2_Y<=30))) //Blue Tile 
+        Money2=Money2+0;
+    else  if (((Player2_X>=290) && (Player2_X<320)) && ((Player2_Y>=1) && (Player2_Y<=30))) //Blue Tile 
+        Money2=Money2+3;
      
     //For Player 2 Right Side 
    
