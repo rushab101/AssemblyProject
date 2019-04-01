@@ -6,7 +6,6 @@
 //Red Tile=+2
 //Blue Tile=+3
 //Teal Tile = +5
-//Yellow Tile =+0
     
 #define BOARD                 "DE1-SoC"
 
@@ -75,7 +74,7 @@
 #define	    KEYS_IRQ	73
 #define	    PS2_IRQ		79
 #define		INT_ENABLE	0b01000000
-
+int changecolour=0;
 volatile int pixel_buffer_start; // global variable
 int ps2_byte_1, ps2_byte_2, ps2_byte_3;
 int go=0;
@@ -130,17 +129,15 @@ int main(void)
 
     srand(time(NULL));
     //Flags
-    short int colour[] = {0x001F, 0x07E0, 0xF800, 0xF81F, 0xFFFF};
+    short int colour[8] = {0x07E0, 0xEC64, 0xF800, 0xF81F, 0xFFFF, 0xFFE0, 0xF81F, 0x07FF};
     volatile int*HEX5_6_ptr=0xFF20020;
      unsigned char seven_seg_decode_table[] = {0x3F, 0x06, 0x5B, 0x4F, 0x66, 0x6D, 0x7D, 0x07,
     0x7F, 0x67, 0x77, 0x7C, 0x39, 0x5E, 0x79, 0x71};
       // unsigned char hex_segs[] = {0, 0};
     
     
-    int b_colour[8];
-    for (int i = 0; i < 8; i++){
-       b_colour[i] = colour[rand() % 5];   // random colour
-    }
+   
+    
 
  	
     //Rotations for player 1
@@ -320,58 +317,8 @@ volatile int *pixel_ctrl_ptr = (int *)0xFF203020;
    
     
     
-   // Start Arrow
-    draw_line(60, 195, 260, 195, 0xFFFF); 
-     for (int i=60 ; i <62 ; i ++){
-         for (int j=195 ; j < 197; j ++){
-              for (int k=75; k < 77; k ++) {
-         		for (int l=205 ; l <207 ; l ++) {
-                     for (int a=0 ; a <8; a++)
-    draw_line(i, j, k, l, b_colour[a]); 
-                }
-              }
-         }
-     }
-    for (int i=60 ; i <62 ; i ++){
-         for (int j=195 ; j < 197; j ++){
-              for (int k=75; k < 77; k ++) {
-         		for (int l=185 ; l <207 ; l ++) {
-                     for (int a=0 ; a <8; a++ )
-    draw_line(i, j, k, l, b_colour[a]); 
-                }
-              }
-         }
-     }
+   
     
-    //Finish Arrow
-   	draw_line(270, 45, 270, 180, 0xFFFF); 
-    for (int i=270 ; i <272 ; i ++){
-         for (int j=180 ; j < 182; j ++){
-              for (int k=260; k < 262; k ++) {
-         		for (int l=170 ; l <172 ; l ++) {
-     draw_line (i,j,k,l, 0xFFFF); 
-                }
-              }
-         }
-    }
-    for (int i=270 ; i <272 ; i ++){
-         for (int j=180 ; j < 182; j ++){
-              for (int k=260; k < 282; k ++) {
-         		for (int l=170 ; l <172 ; l ++) {
-     draw_line (i,j,k,l, 0xFFFF); 
-                }
-              }
-         }
-    }
-     for (int i=270 ; i <272 ; i ++){
-         for (int j=180 ; j < 182; j ++){
-              for (int k=280; k < 282; k ++) {
-         		for (int l=170 ; l <172 ; l ++) {
-     draw_line (i,j,k,l, 0xFFFF); 
-                }
-              }
-         }
-    }
     
     // Start
     //S
@@ -448,6 +395,70 @@ volatile int *pixel_ctrl_ptr = (int *)0xFF203020;
    
     //draw_line(319, 0, 0, 239, 0xF81F);   // this line is a pink color
     while(1){
+        // Start Arrow
+        
+        if (turn%2==0){
+          if (player1!=true){   
+        changecolour=0;  
+          }
+        }
+        
+        else{
+        changecolour=1;
+        }
+        
+    draw_line(60, 195, 260, 195,colour[changecolour]); 
+     for (int i=60 ; i <62 ; i ++){
+         for (int j=195 ; j < 197; j ++){
+              for (int k=75; k < 77; k ++) {
+         		for (int l=205 ; l <207 ; l ++) {
+                     for (int a=0 ; a <8; a++)
+    draw_line(i, j, k, l, colour[changecolour]); 
+                }
+              }
+         }
+     }
+    for (int i=60 ; i <62 ; i ++){
+         for (int j=195 ; j < 197; j ++){
+              for (int k=75; k < 77; k ++) {
+         		for (int l=185 ; l <207 ; l ++) {
+    draw_line(i, j, k, l, colour[changecolour]); 
+                }
+              }
+         }
+     }
+        
+        //Finish Arrow
+   	draw_line(270, 45, 270, 180, colour[changecolour]); 
+    for (int i=270 ; i <272 ; i ++){
+         for (int j=180 ; j < 182; j ++){
+              for (int k=260; k < 262; k ++) {
+         		for (int l=170 ; l <172 ; l ++) {
+     draw_line (i,j,k,l, colour[changecolour]); 
+                }
+              }
+         }
+    }
+    for (int i=270 ; i <272 ; i ++){
+         for (int j=180 ; j < 182; j ++){
+              for (int k=260; k < 282; k ++) {
+         		for (int l=170 ; l <172 ; l ++) {
+     draw_line (i,j,k,l, colour[changecolour]); 
+                }
+              }
+         }
+    }
+     for (int i=270 ; i <272 ; i ++){
+         for (int j=180 ; j < 182; j ++){
+              for (int k=280; k < 282; k ++) {
+         		for (int l=170 ; l <172 ; l ++) {
+     draw_line (i,j,k,l, colour[changecolour]); 
+                }
+              }
+         }
+    }
+    
+        
       //Boundaries for Player 1  
        if ((Player1_X<=15) && (Player1_Y>=212)){
             up=true; 
