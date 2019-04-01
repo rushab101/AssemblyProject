@@ -6,6 +6,7 @@
 //Red Tile=+2
 //Blue Tile=+3
 //Teal Tile = +5
+//Yellow Tile =+0
     
 #define BOARD                 "DE1-SoC"
 
