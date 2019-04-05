@@ -172,6 +172,7 @@ int main(void)
     
 volatile int *pixel_ctrl_ptr = (int *)0xFF203020;
     /* Read location of the pixel buffer from the pixel buffer controller */
+    int i,k,l,m,a,j;
     pixel_buffer_start = *pixel_ctrl_ptr;
     clear_screen();
 	while(1){
@@ -440,69 +441,89 @@ volatile int *pixel_ctrl_ptr = (int *)0xFF203020;
      //Conditions for dice Roll
    
     //draw_line(319, 0, 0, 239, 0xF81F);   // this line is a pink color
-    while(1){
-        // Start Arrow
-        
-        if (turn%2==0){
+  while(1){
+       if (turn%2==0){
           if (player1!=true){   
         changecolour=0;  
           }
+        
+        }
+         
+        if (turn%2!=0){
+          if (player2!=true){   
+        changecolour=1;  
+          }
+        
         }
         
-        else{
+    
+
+    if (player1==true){
         changecolour=1;
         }
+    if (player2==true){
+        changecolour=0;
+        }
+       
+       
+       
+       
+        // Start Arrow
         
-    draw_line(60, 195, 260, 195,colour[changecolour]); 
-     for (int i=60 ; i <62 ; i ++){
-         for (int j=195 ; j < 197; j ++){
-              for (int k=75; k < 77; k ++) {
-         		for (int l=205 ; l <207 ; l ++) {
-                     for (int a=0 ; a <8; a++)
+       
+        draw_line(60, 195, 260, 195,colour[changecolour]); 
+     for (i=60 ; i <62 ; i ++){
+         for (j=195 ; j < 197; j ++){
+              for (k=75; k < 77; k ++) {
+         		for (l=205 ; l <207 ; l ++) {
+                     for (a=0 ; a <8; a++)
     draw_line(i, j, k, l, colour[changecolour]); 
                 }
               }
          }
      }
-    for (int i=60 ; i <62 ; i ++){
-         for (int j=195 ; j < 197; j ++){
-              for (int k=75; k < 77; k ++) {
-         		for (int l=185 ; l <207 ; l ++) {
+    for (i=60 ; i <62 ; i ++){
+         for (j=195 ; j < 197; j ++){
+              for (k=75; k < 77; k ++) {
+         		for (l=185 ; l <207 ; l ++) {
     draw_line(i, j, k, l, colour[changecolour]); 
                 }
               }
          }
      }
+
+
         
         //Finish Arrow
    	draw_line(270, 45, 270, 180, colour[changecolour]); 
-    for (int i=270 ; i <272 ; i ++){
-         for (int j=180 ; j < 182; j ++){
-              for (int k=260; k < 262; k ++) {
-         		for (int l=170 ; l <172 ; l ++) {
+    for ( i=270 ; i <272 ; i ++){
+         for ( j=180 ; j < 182; j ++){
+              for ( k=260; k < 262; k ++) {
+         		for ( l=170 ; l <172 ; l ++) {
      draw_line (i,j,k,l, colour[changecolour]); 
                 }
               }
          }
     }
-    for (int i=270 ; i <272 ; i ++){
-         for (int j=180 ; j < 182; j ++){
-              for (int k=260; k < 282; k ++) {
-         		for (int l=170 ; l <172 ; l ++) {
+    for ( i=270 ; i <272 ; i ++){
+         for ( j=180 ; j < 182; j ++){
+              for ( k=260; k < 282; k ++) {
+         		for ( l=170 ; l <172 ; l ++) {
      draw_line (i,j,k,l, colour[changecolour]); 
                 }
               }
          }
     }
-     for (int i=270 ; i <272 ; i ++){
-         for (int j=180 ; j < 182; j ++){
-              for (int k=280; k < 282; k ++) {
-         		for (int l=170 ; l <172 ; l ++) {
+     for ( i=270 ; i <272 ; i ++){
+         for ( j=180 ; j < 182; j ++){
+              for ( k=280; k < 282; k ++) {
+         		for ( l=170 ; l <172 ; l ++) {
      draw_line (i,j,k,l, colour[changecolour]); 
                 }
               }
          }
     }
+    
     
         
       //Boundaries for Player 1  
@@ -556,8 +577,8 @@ volatile int *pixel_ctrl_ptr = (int *)0xFF203020;
                 }
                 else {
                 Player1_Y=Player1_Y+30;  
-         for (int i=Player1_X; i < Player1_X+10; i ++)
-        for (int j=Player1_Y; j < Player1_Y+10; j ++)
+         for ( i=Player1_X; i < Player1_X+10; i ++)
+        for ( j=Player1_Y; j < Player1_Y+10; j ++)
         plot_pixel(i,j, 0x07E0);
                  updateValue_Player1();
                 }
@@ -574,8 +595,8 @@ volatile int *pixel_ctrl_ptr = (int *)0xFF203020;
                  
                  else {
                 Player1_Y=Player1_Y+60;  
-         for (int i=Player1_X; i < Player1_X+10; i ++)
-        for (int j=Player1_Y; j < Player1_Y+10; j ++)
+         for ( i=Player1_X; i < Player1_X+10; i ++)
+        for ( j=Player1_Y; j < Player1_Y+10; j ++)
         plot_pixel(i,j, 0x07E0);
                   updateValue_Player1();
                  }
@@ -596,8 +617,8 @@ volatile int *pixel_ctrl_ptr = (int *)0xFF203020;
                  
                 else { 
                     Player1_Y=Player1_Y+90;  
-         for (int i=Player1_X; i < Player1_X+10; i ++)
-        for (int j=Player1_Y; j < Player1_Y+10; j ++)
+         for ( i=Player1_X; i < Player1_X+10; i ++)
+        for ( j=Player1_Y; j < Player1_Y+10; j ++)
         plot_pixel(i,j, 0x07E0);
                   updateValue_Player1();
                 }
@@ -608,19 +629,28 @@ volatile int *pixel_ctrl_ptr = (int *)0xFF203020;
             if (dice==1){
                 if ((Player1_X >=290) && (Player1_X <320) && (Player1_Y <30)) { //At the blue tile
                  Player1_Y=Player1_Y+30;    
-                    for (int i=Player1_X; i < Player1_X+10; i ++)
-        for (int j=Player1_Y; j < Player1_Y+10; j ++)
+                    for ( i=Player1_X; i < Player1_X+10; i ++)
+        for ( j=Player1_Y; j < Player1_Y+10; j ++)
         plot_pixel(i,j, 0x07E0);
                  updateValue_Player1();
                     right=false;
                     down=true;
                 }
                 
+                 else if ((Player1_X >=270) && (Player1_X <290) && (Player1_Y <30)) { //At the Yellow tile 
+                 Player1_X=Player1_X+25; 
+                    for ( i=Player1_X; i < Player1_X+10; i ++)
+        for ( j=Player1_Y; j < Player1_Y+10; j ++)
+        plot_pixel(i,j, 0x07E0);
+                 updateValue_Player1();
+                  
+                }
+                
                 
                 else {
                 Player1_X=Player1_X+30;
-        for (int i=Player1_X; i < Player1_X+10; i ++)
-        for (int j=Player1_Y; j < Player1_Y+10; j ++)
+        for ( i=Player1_X; i < Player1_X+10; i ++)
+        for ( j=Player1_Y; j < Player1_Y+10; j ++)
         plot_pixel(i,j, 0x07E0); 
                  updateValue_Player1();
                 }
@@ -628,8 +658,8 @@ volatile int *pixel_ctrl_ptr = (int *)0xFF203020;
             if (dice==2){
                 if ((Player1_X >=290) && (Player1_X <320) && (Player1_Y <30)) { //At the blue tile
                  Player1_Y=Player1_Y+60;    
-                    for (int i=Player1_X; i < Player1_X+10; i ++)
-        for (int j=Player1_Y; j < Player1_Y+10; j ++)
+                    for ( i=Player1_X; i < Player1_X+10; i ++)
+        for ( j=Player1_Y; j < Player1_Y+10; j ++)
         plot_pixel(i,j, 0x07E0);
                  updateValue_Player1();
                     right=false;
@@ -638,19 +668,37 @@ volatile int *pixel_ctrl_ptr = (int *)0xFF203020;
                 else if ((Player1_X >=270) && (Player1_X <290) && (Player1_Y <30)) { //At the Yellow tile 
                  Player1_X=Player1_X+25;
                   Player1_Y=Player1_Y+30;    
-                    for (int i=Player1_X; i < Player1_X+10; i ++)
-        for (int j=Player1_Y; j < Player1_Y+10; j ++)
+                    for ( i=Player1_X; i < Player1_X+10; i ++)
+        for ( j=Player1_Y; j < Player1_Y+10; j ++)
         plot_pixel(i,j, 0x07E0);
                  updateValue_Player1();
                     right=false;
                     down=true;
                 }
+                
+                else if ((Player1_X >=240) && (Player1_X <270) && (Player1_Y <30)) { //At the Second Blue tile 
+                 Player1_X=Player1_X+55;  
+                    for ( i=Player1_X; i < Player1_X+10; i ++)
+        for ( j=Player1_Y; j < Player1_Y+10; j ++)
+        plot_pixel(i,j, 0x07E0);
+                 updateValue_Player1();
+                    right=false;
+                    down=true;
+                }
+                
+                 else if ((Player1_X >=210) && (Player1_X <240) && (Player1_Y <30)) { //At the Red tile 
+                 Player1_X=Player1_X+55;    
+                    for ( i=Player1_X; i < Player1_X+10; i ++)
+        for ( j=Player1_Y; j < Player1_Y+10; j ++)
+        plot_pixel(i,j, 0x07E0);
+                 updateValue_Player1();
+                }   
                    
                 
                 else {
                 Player1_X=Player1_X+60;
-        for (int i=Player1_X; i < Player1_X+10; i ++)
-        for (int j=Player1_Y; j < Player1_Y+10; j ++)
+        for ( i=Player1_X; i < Player1_X+10; i ++)
+        for ( j=Player1_Y; j < Player1_Y+10; j ++)
         plot_pixel(i,j, 0x07E0);
                  updateValue_Player1();
                 }
@@ -658,8 +706,8 @@ volatile int *pixel_ctrl_ptr = (int *)0xFF203020;
             if (dice==3){
                 if ((Player1_X >=290) && (Player1_X <320) && (Player1_Y <30)) { //At the blue tile
                  Player1_Y=Player1_Y+90;    
-                    for (int i=Player1_X; i < Player1_X+10; i ++)
-        for (int j=Player1_Y; j < Player1_Y+10; j ++)
+                    for ( i=Player1_X; i < Player1_X+10; i ++)
+        for ( j=Player1_Y; j < Player1_Y+10; j ++)
         plot_pixel(i,j, 0x07E0);
                  updateValue_Player1();
                     right=false;
@@ -668,8 +716,8 @@ volatile int *pixel_ctrl_ptr = (int *)0xFF203020;
                 else if ((Player1_X >=270) && (Player1_X <290) && (Player1_Y <30)) { //At the Yellow tile 
                  Player1_X=Player1_X+25;
                   Player1_Y=Player1_Y+60;    
-                    for (int i=Player1_X; i < Player1_X+10; i ++)
-        for (int j=Player1_Y; j < Player1_Y+10; j ++)
+                    for ( i=Player1_X; i < Player1_X+10; i ++)
+        for ( j=Player1_Y; j < Player1_Y+10; j ++)
         plot_pixel(i,j, 0x07E0);
                  updateValue_Player1();
                     right=false;
@@ -678,18 +726,28 @@ volatile int *pixel_ctrl_ptr = (int *)0xFF203020;
                 else if ((Player1_X >=240) && (Player1_X <270) && (Player1_Y <30)) { //At the Blue tile 
                  Player1_X=Player1_X+55;
                   Player1_Y=Player1_Y+30;    
-                    for (int i=Player1_X; i < Player1_X+10; i ++)
-        for (int j=Player1_Y; j < Player1_Y+10; j ++)
+                    for ( i=Player1_X; i < Player1_X+10; i ++)
+        for ( j=Player1_Y; j < Player1_Y+10; j ++)
         plot_pixel(i,j, 0x07E0);
                  updateValue_Player1();
                     right=false;
                     down=true;
                 }
                 
+                  else if ((Player1_X >=210) && (Player1_X <240) && (Player1_Y <30)) { //At the Red tile 
+                 Player1_X=Player1_X+85;    
+                    for ( i=Player1_X; i < Player1_X+10; i ++)
+        for ( j=Player1_Y; j < Player1_Y+10; j ++)
+        plot_pixel(i,j, 0x07E0);
+                 updateValue_Player1();
+                    right=false;
+                    down=true;
+                }   
+                
                 else {
                 Player1_X=Player1_X+90;
-        for (int i=Player1_X; i < Player1_X+10; i ++)
-        for (int j=Player1_Y; j < Player1_Y+10; j ++)
+        for ( i=Player1_X; i < Player1_X+10; i ++)
+        for ( j=Player1_Y; j < Player1_Y+10; j ++)
         plot_pixel(i,j, 0x07E0);
                  updateValue_Player1();
                 }
@@ -703,8 +761,8 @@ volatile int *pixel_ctrl_ptr = (int *)0xFF203020;
             if (dice==1){
                 if ((Player1_Y>1) && (Player1_Y<30) && (Player1_X <30)){ //At the teal tile
                      Player1_X=Player1_X+30;
-        for (int i=Player1_X; i < Player1_X+10; i ++)
-        for (int j=Player1_Y; j < Player1_Y+10; j ++)
+        for ( i=Player1_X; i < Player1_X+10; i ++)
+        for ( j=Player1_Y; j < Player1_Y+10; j ++)
         plot_pixel(i,j, 0x07E0); 
                    updateValue_Player1();
                       up=false;
@@ -714,8 +772,8 @@ volatile int *pixel_ctrl_ptr = (int *)0xFF203020;
                 
                 else {
                 Player1_Y=Player1_Y-30;
-        for (int i=Player1_X; i < Player1_X+10; i ++)
-        for (int j=Player1_Y; j < Player1_Y+10; j ++)
+        for ( i=Player1_X; i < Player1_X+10; i ++)
+        for ( j=Player1_Y; j < Player1_Y+10; j ++)
         plot_pixel(i,j, 0x07E0); 
                  updateValue_Player1();
                 }
@@ -723,8 +781,8 @@ volatile int *pixel_ctrl_ptr = (int *)0xFF203020;
               if (dice==2){
                 if ((Player1_Y>1) && (Player1_Y<30) && (Player1_X <30)){ //At the teal tile
                      Player1_X=Player1_X+60;
-        for (int i=Player1_X; i < Player1_X+10; i ++)
-        for (int j=Player1_Y; j < Player1_Y+10; j ++)
+        for ( i=Player1_X; i < Player1_X+10; i ++)
+        for ( j=Player1_Y; j < Player1_Y+10; j ++)
         plot_pixel(i,j, 0x07E0); 
                    updateValue_Player1();
                       up=false;
@@ -733,8 +791,8 @@ volatile int *pixel_ctrl_ptr = (int *)0xFF203020;
                    else if ((Player1_Y>30) && (Player1_Y<60) && (Player1_X<30)){ //At the pink tile
                    Player1_Y=Player1_Y-30;
                    Player1_X=Player1_X+30;
-        for (int i=Player1_X; i < Player1_X+10; i ++)
-        for (int j=Player1_Y; j < Player1_Y+10; j ++)
+        for ( i=Player1_X; i < Player1_X+10; i ++)
+        for ( j=Player1_Y; j < Player1_Y+10; j ++)
         plot_pixel(i,j, 0x07E0); 
                    updateValue_Player1();
                       up=false;
@@ -743,8 +801,8 @@ volatile int *pixel_ctrl_ptr = (int *)0xFF203020;
                  else {
                      
                      Player1_Y=Player1_Y-60;
-        for (int i=Player1_X; i < Player1_X+10; i ++)
-        for (int j=Player1_Y; j < Player1_Y+10; j ++)
+        for ( i=Player1_X; i < Player1_X+10; i ++)
+        for ( j=Player1_Y; j < Player1_Y+10; j ++)
         plot_pixel(i,j, 0x07E0); 
                    updateValue_Player1();
                  }
@@ -753,8 +811,8 @@ volatile int *pixel_ctrl_ptr = (int *)0xFF203020;
                 	 
                   if ((Player1_Y>1) && (Player1_Y<30) && (Player1_X <30)){ //At the teal tile
                      Player1_X=Player1_X+90;
-        for (int i=Player1_X; i < Player1_X+10; i ++)
-        for (int j=Player1_Y; j < Player1_Y+10; j ++)
+        for ( i=Player1_X; i < Player1_X+10; i ++)
+        for ( j=Player1_Y; j < Player1_Y+10; j ++)
         plot_pixel(i,j, 0x07E0); 
                    updateValue_Player1();
                       up=false;
@@ -763,8 +821,8 @@ volatile int *pixel_ctrl_ptr = (int *)0xFF203020;
                  else if ((Player1_Y>30) && (Player1_Y<60) && (Player1_X<30)){ //At the pink tile
                    Player1_Y=Player1_Y-30;
                    Player1_X=Player1_X+60;
-        for (int i=Player1_X; i < Player1_X+10; i ++)
-        for (int j=Player1_Y; j < Player1_Y+10; j ++)
+        for ( i=Player1_X; i < Player1_X+10; i ++)
+        for ( j=Player1_Y; j < Player1_Y+10; j ++)
         plot_pixel(i,j, 0x07E0); 
                    updateValue_Player1();
                       up=false;
@@ -773,8 +831,8 @@ volatile int *pixel_ctrl_ptr = (int *)0xFF203020;
                else if ((Player1_Y>60) && (Player1_Y<90) && (Player1_X<30)) {  //Red Tile
                    Player1_Y=Player1_Y-60;
                    Player1_X=Player1_X+30;
-        for (int i=Player1_X; i < Player1_X+10; i ++)
-        for (int j=Player1_Y; j < Player1_Y+10; j ++)
+        for ( i=Player1_X; i < Player1_X+10; i ++)
+        for ( j=Player1_Y; j < Player1_Y+10; j ++)
         plot_pixel(i,j, 0x07E0); 
                    updateValue_Player1();
                       up=false;
@@ -783,8 +841,8 @@ volatile int *pixel_ctrl_ptr = (int *)0xFF203020;
                }
                else {   
                   Player1_Y=Player1_Y-90;
-        for (int i=Player1_X; i < Player1_X+10; i ++)
-        for (int j=Player1_Y; j < Player1_Y+10; j ++)
+        for ( i=Player1_X; i < Player1_X+10; i ++)
+        for ( j=Player1_Y; j < Player1_Y+10; j ++)
         plot_pixel(i,j, 0x07E0); 
                    updateValue_Player1();
                }
@@ -795,17 +853,26 @@ volatile int *pixel_ctrl_ptr = (int *)0xFF203020;
             if (dice==1){
            if (((Player1_X <=1) && (Player1_X>31)) && (Player1_Y>209)){ //At the last red tile
                   Player1_Y=Player1_Y-30;
-        			for (int i=Player1_X; i < Player1_X+10; i ++)
-        			for (int j=Player1_Y; j < Player1_Y+10; j ++)
+        			for ( i=Player1_X; i < Player1_X+10; i ++)
+        			for (j=Player1_Y; j < Player1_Y+10; j ++)
         			plot_pixel(i,j, 0x07E0); 
                  updateValue_Player1();   
                  left=false;
                     up=true;
                 }
+                
+         else if ((Player1_X>=49) && (Player1_X<79) && (Player1_Y>209)){  //At the Second Red Tile
+                 Player1_X=Player1_X-23;
+                    for ( i=Player1_X; i < Player1_X+10; i ++)
+        for ( j=Player1_Y; j < Player1_Y+10; j ++)
+        plot_pixel(i,j, 0x07E0);    
+                  updateValue_Player1();  
+                }
+                
           else {
               Player1_X=Player1_X-30;  
-    for (int i=Player1_X; i < Player1_X+10; i ++)
-        for (int j=Player1_Y; j < Player1_Y+10; j ++)
+    for ( i=Player1_X; i < Player1_X+10; i ++)
+        for ( j=Player1_Y; j < Player1_Y+10; j ++)
         plot_pixel(i,j, 0x07E0);
               updateValue_Player1();
           }
@@ -813,8 +880,8 @@ volatile int *pixel_ctrl_ptr = (int *)0xFF203020;
             if (dice==2){
                 if (((Player1_X <=1) && (Player1_X>31)) && (Player1_Y>209)){ //At the last red tile
                   Player1_Y=Player1_Y-60;
-        			for (int i=Player1_X; i < Player1_X+10; i ++)
-        			for (int j=Player1_Y; j < Player1_Y+10; j ++)
+        			for ( i=Player1_X; i < Player1_X+10; i ++)
+        			for ( j=Player1_Y; j < Player1_Y+10; j ++)
         			plot_pixel(i,j, 0x07E0); 
                  updateValue_Player1();   
                  left=false;
@@ -823,18 +890,38 @@ volatile int *pixel_ctrl_ptr = (int *)0xFF203020;
                 else if ((Player1_X >=20)&& (Player1_X<49) && (Player1_Y>209)){ //At the Yellow Tile
                 	Player1_X=Player1_X-25;
                  Player1_Y=Player1_Y-30;    
-    	for (int i=Player1_X; i < Player1_X+10; i ++)
-        for (int j=Player1_Y; j < Player1_Y+10; j ++)
+    	for ( i=Player1_X; i < Player1_X+10; i ++)
+        for ( j=Player1_Y; j < Player1_Y+10; j ++)
         plot_pixel(i,j, 0x07E0);    
                   updateValue_Player1();  
                     left=false;
                     up=true;
                 } 
                 
+                else if ((Player1_X>=49) && (Player1_X<79) && (Player1_Y>209)){  //At the Red Tile
+                 Player1_X=Player1_X-55; 
+                    for ( i=Player1_X; i < Player1_X+10; i ++)
+        for ( j=Player1_Y; j < Player1_Y+10; j ++)
+        plot_pixel(i,j, 0x07E0);    
+                  updateValue_Player1();  
+                    left=false;
+                    up=true;
+                }
+                
+                               
+                 else if ((Player1_X>=79) && (Player1_X<109) && (Player1_Y>209)){  //At the Blue Tile
+                 Player1_X=Player1_X-58; 
+                    for ( i=Player1_X; i < Player1_X+10; i ++)
+        for ( j=Player1_Y; j < Player1_Y+10; j ++)
+        plot_pixel(i,j, 0x07E0);    
+                  updateValue_Player1();  
+                   
+                }
+                
                 
             else { Player1_X=Player1_X-60;  
-    	for (int i=Player1_X; i < Player1_X+10; i ++)
-        for (int j=Player1_Y; j < Player1_Y+10; j ++)
+    	for ( i=Player1_X; i < Player1_X+10; i ++)
+        for ( j=Player1_Y; j < Player1_Y+10; j ++)
         plot_pixel(i,j, 0x07E0);
                 updateValue_Player1();
                  }
@@ -842,8 +929,8 @@ volatile int *pixel_ctrl_ptr = (int *)0xFF203020;
             if (dice==3){
                 if (((Player1_X <=1) && (Player1_X>31)) && (Player1_Y>209)){ //At the last red tile
                   Player1_Y=Player1_Y-90;
-        			for (int i=Player1_X; i < Player1_X+10; i ++)
-        			for (int j=Player1_Y; j < Player1_Y+10; j ++)
+        			for ( i=Player1_X; i < Player1_X+10; i ++)
+        			for ( j=Player1_Y; j < Player1_Y+10; j ++)
         			plot_pixel(i,j, 0x07E0); 
                  updateValue_Player1();   
                  left=false;
@@ -853,8 +940,8 @@ volatile int *pixel_ctrl_ptr = (int *)0xFF203020;
                 else if ((Player1_X >=20)&& (Player1_X<49) && (Player1_Y>209)){ //At the Yellow Tile
                 	Player1_X=Player1_X-20;
                  Player1_Y=Player1_Y-60;    
-    	for (int i=Player1_X; i < Player1_X+10; i ++)
-        for (int j=Player1_Y; j < Player1_Y+10; j ++)
+    	for ( i=Player1_X; i < Player1_X+10; i ++)
+        for ( j=Player1_Y; j < Player1_Y+10; j ++)
         plot_pixel(i,j, 0x07E0);    
                   updateValue_Player1();  
                     left=false;
@@ -863,8 +950,8 @@ volatile int *pixel_ctrl_ptr = (int *)0xFF203020;
                 else if ((Player1_X>=49) && (Player1_X<79) && (Player1_Y>209)){  //At the Red Tile
                  Player1_X=Player1_X-50;
                     Player1_Y=Player1_Y-30; 
-                    for (int i=Player1_X; i < Player1_X+10; i ++)
-        for (int j=Player1_Y; j < Player1_Y+10; j ++)
+                    for ( i=Player1_X; i < Player1_X+10; i ++)
+        for ( j=Player1_Y; j < Player1_Y+10; j ++)
         plot_pixel(i,j, 0x07E0);    
                   updateValue_Player1();  
                     left=false;
@@ -872,18 +959,28 @@ volatile int *pixel_ctrl_ptr = (int *)0xFF203020;
                 }
             else if ((Player1_X>=79) && (Player1_X<109) && (Player1_Y>209)){  //At the Red Tile
                 Player1_X=Player1_X-85; 
-              for (int i=Player1_X; i < Player1_X+10; i ++)  
-        for (int j=Player1_Y; j < Player1_Y+10; j ++)
+              for ( i=Player1_X; i < Player1_X+10; i ++)  
+        for ( j=Player1_Y; j < Player1_Y+10; j ++)
         plot_pixel(i,j, 0x07E0);    
                   updateValue_Player1();  
                 left=false;
                     up=true;
                 }
                 
+                else if ((Player1_X>=109) && (Player1_X<139) && (Player1_Y>209)){  //At the PINK Tile
+                Player1_X=Player1_X-85; 
+              for ( i=Player1_X; i < Player1_X+10; i ++)  
+        for ( j=Player1_Y; j < Player1_Y+10; j ++)
+        plot_pixel(i,j, 0x07E0);    
+                  updateValue_Player1();  
+             
+                }
+                
+                
              else { 
                  Player1_X=Player1_X-90;  
-    	for (int i=Player1_X; i < Player1_X+10; i ++)
-        for (int j=Player1_Y; j < Player1_Y+10; j ++)
+    	for ( i=Player1_X; i < Player1_X+10; i ++)
+        for ( j=Player1_Y; j < Player1_Y+10; j ++)
         plot_pixel(i,j, 0x07E0);
                updateValue_Player1();
              }
@@ -907,8 +1004,8 @@ volatile int *pixel_ctrl_ptr = (int *)0xFF203020;
                  }
                 else {
                  Player2_Y=Player2_Y+30;  
-        for (int i=Player2_X; i < Player2_X+10; i ++)
-        for (int j=Player2_Y; j < Player2_Y+10; j ++)
+        for ( i=Player2_X; i < Player2_X+10; i ++)
+        for ( j=Player2_Y; j < Player2_Y+10; j ++)
         plot_pixel(i,j, 0xEC64);
                  updateValue_Player2();
                 }
@@ -924,8 +1021,8 @@ volatile int *pixel_ctrl_ptr = (int *)0xFF203020;
                  }
                 else {
                  Player2_Y=Player2_Y+60;  
-        for (int i=Player2_X; i < Player2_X+10; i ++)
-        for (int j=Player2_Y; j < Player2_Y+10; j ++)
+        for ( i=Player2_X; i < Player2_X+10; i ++)
+        for ( j=Player2_Y; j < Player2_Y+10; j ++)
         plot_pixel(i,j, 0xEC64); 
                  updateValue_Player2();
                 }
@@ -948,8 +1045,8 @@ volatile int *pixel_ctrl_ptr = (int *)0xFF203020;
                 
                 else {
                  Player2_Y=Player2_Y+90;  
-        for (int i=Player2_X; i < Player2_X+10; i ++)
-        for (int j=Player2_Y; j < Player2_Y+10; j ++)
+        for ( i=Player2_X; i < Player2_X+10; i ++)
+        for ( j=Player2_Y; j < Player2_Y+10; j ++)
         plot_pixel(i,j, 0xEC64);
                 }
                  updateValue_Player2();
@@ -960,18 +1057,37 @@ volatile int *pixel_ctrl_ptr = (int *)0xFF203020;
             if (dice==1){
                 if ((Player2_X >=290) && (Player2_X <320) && (Player2_Y <30)) { //At the blue tile
                  Player2_Y=Player2_Y+90;    
-                    for (int i=Player1_X; i < Player1_X+10; i ++)
-        for (int j=Player2_Y; j < Player2_Y+10; j ++)
+                    for ( i=Player1_X; i < Player1_X+10; i ++)
+        for ( j=Player2_Y; j < Player2_Y+10; j ++)
         plot_pixel(i,j, 0xEC64);
                  updateValue_Player2();
                     right2=false;
                     down2=true;
                 }
                 
+                else if ((Player2_X >=270) && (Player2_X <290) && (Player2_Y <30)) { //At the Yellow tile 
+                 Player2_X=Player2_X+25;   
+                    for ( i=Player2_X; i < Player2_X+10; i ++)
+        for ( j=Player2_Y; j < Player2_Y+10; j ++)
+        plot_pixel(i,j, 0xEC64);
+                 updateValue_Player2();
+                    right2=false;
+                    down2=true;
+                }
+                
+                  else if ((Player2_X >=240) && (Player2_X <270) && (Player2_Y <30)) { //At the Blue tile 
+                 Player2_X=Player2_X+25;                   
+                    for ( i=Player2_X; i < Player2_X+10; i ++)
+        for ( j=Player2_Y; j < Player2_Y+10; j ++)
+        plot_pixel(i,j, 0xEC64);
+                 updateValue_Player2();
+           
+                }
+                
                 else {
                  Player2_X=Player2_X+30; 
-        for (int i=Player2_X; i < Player2_X+10; i ++)
-        for (int j=Player2_Y; j < Player2_Y+10; j ++)
+        for ( i=Player2_X; i < Player2_X+10; i ++)
+        for ( j=Player2_Y; j < Player2_Y+10; j ++)
         plot_pixel(i,j, 0xEC64);
                  updateValue_Player2();
                 }
@@ -979,8 +1095,8 @@ volatile int *pixel_ctrl_ptr = (int *)0xFF203020;
              if (dice==2){
                  if ((Player2_X >=290) && (Player2_X <320) && (Player2_Y <30)) { //At the blue tile
                  Player2_Y=Player2_Y+60;    
-                    for (int i=Player1_X; i < Player1_X+10; i ++)
-        for (int j=Player2_Y; j < Player2_Y+10; j ++)
+                    for ( i=Player1_X; i < Player1_X+10; i ++)
+        for ( j=Player2_Y; j < Player2_Y+10; j ++)
         plot_pixel(i,j, 0xEC64);
                  updateValue_Player2();
                     right2=false;
@@ -989,18 +1105,21 @@ volatile int *pixel_ctrl_ptr = (int *)0xFF203020;
                  else if ((Player2_X >=270) && (Player2_X <290) && (Player2_Y <30)) { //At the Yellow tile 
                  Player2_X=Player2_X+25;
                   Player2_Y=Player2_Y+30;    
-                    for (int i=Player2_X; i < Player2_X+10; i ++)
-        for (int j=Player2_Y; j < Player2_Y+10; j ++)
+                    for ( i=Player2_X; i < Player2_X+10; i ++)
+        for ( j=Player2_Y; j < Player2_Y+10; j ++)
         plot_pixel(i,j, 0xEC64);
                  updateValue_Player2();
                     right2=false;
                     down2=true;
                 }
+                
+                 
+            
                  
                  else {
                  Player2_X=Player2_X+60; 
-        for (int i=Player2_X; i < Player2_X+10; i ++)
-        for (int j=Player2_Y; j < Player2_Y+10; j ++)
+        for ( i=Player2_X; i < Player2_X+10; i ++)
+        for ( j=Player2_Y; j < Player2_Y+10; j ++)
         plot_pixel(i,j, 0xEC64);
                   updateValue_Player2();
                  }
@@ -1008,8 +1127,8 @@ volatile int *pixel_ctrl_ptr = (int *)0xFF203020;
              if (dice==3){
                  if ((Player2_X >=290) && (Player2_X <320) && (Player2_Y <30)) { //At the blue tile
                  Player2_Y=Player2_Y+90;    
-                    for (int i=Player1_X; i < Player1_X+10; i ++)
-        for (int j=Player2_Y; j < Player2_Y+10; j ++)
+                    for ( i=Player1_X; i < Player1_X+10; i ++)
+        for ( j=Player2_Y; j < Player2_Y+10; j ++)
         plot_pixel(i,j, 0xEC64);
                  updateValue_Player2();
                     right2=false;
@@ -1018,8 +1137,8 @@ volatile int *pixel_ctrl_ptr = (int *)0xFF203020;
                 else if ((Player2_X >=270) && (Player2_X <290) && (Player2_Y <30)) { //At the Yellow tile 
                  Player2_X=Player2_X+25;
                   Player2_Y=Player2_Y+60;    
-                    for (int i=Player2_X; i < Player2_X+10; i ++)
-        for (int j=Player2_Y; j < Player2_Y+10; j ++)
+                    for ( i=Player2_X; i < Player2_X+10; i ++)
+        for ( j=Player2_Y; j < Player2_Y+10; j ++)
         plot_pixel(i,j, 0xEC64);
                  updateValue_Player2();
                     right2=false;
@@ -1028,18 +1147,34 @@ volatile int *pixel_ctrl_ptr = (int *)0xFF203020;
                 else if ((Player2_X >=240) && (Player2_X <270) && (Player2_Y <30)) { //At the Blue tile 
                  Player2_X=Player2_X+55;
                   Player2_Y=Player2_Y+30;    
-                    for (int i=Player2_X; i < Player2_X+10; i ++)
-        for (int j=Player2_Y; j < Player2_Y+10; j ++)
+                    for ( i=Player2_X; i < Player2_X+10; i ++)
+        for ( j=Player2_Y; j < Player2_Y+10; j ++)
         plot_pixel(i,j, 0xEC64);
                  updateValue_Player2();
                     right2=false;
                     down2=true;
                 }
-                 Player2_X=Player2_X+90; 
-        for (int i=Player2_X; i < Player2_X+10; i ++)
-        for (int j=Player2_Y; j < Player2_Y+10; j ++)
+                
+                    else if ((Player2_X >=210) && (Player2_X <240) && (Player2_Y <30)) { //At the Red tile 
+                 Player2_X=Player2_X+85;    
+                    for ( i=Player2_X; i < Player2_X+10; i ++)
+        for ( j=Player2_Y; j < Player2_Y+10; j ++)
+        plot_pixel(i,j, 0xEC64);
+                 updateValue_Player2();
+                    right2=false;
+                    down2=true;
+                }   
+                      
+                 
+                 
+                 
+                else { 
+                    Player2_X=Player2_X+90; 
+        for ( i=Player2_X; i < Player2_X+10; i ++)
+        for ( j=Player2_Y; j < Player2_Y+10; j ++)
         plot_pixel(i,j, 0xEC64);
                   updateValue_Player2();
+                }
             }
             
         }
@@ -1048,8 +1183,8 @@ volatile int *pixel_ctrl_ptr = (int *)0xFF203020;
             if (dice==1){
                   if ((Player2_Y>1) && (Player2_Y<30) && (Player2_X <30)){ //At the teal tile
                      Player2_Y=Player2_X+30;
-        for (int i=Player2_X; i < Player2_X+10; i ++)
-        for (int j=Player2_Y; j < Player2_Y+10; j ++)
+        for ( i=Player2_X; i < Player2_X+10; i ++)
+        for ( j=Player2_Y; j < Player2_Y+10; j ++)
         plot_pixel(i,j, 0xEC64); 
                    updateValue_Player2();
                       up2=false;
@@ -1058,8 +1193,8 @@ volatile int *pixel_ctrl_ptr = (int *)0xFF203020;
                       
                 else {
                 Player2_Y=Player2_Y-30;
-        for (int i=Player2_X; i < Player2_X+10; i ++)
-        for (int j=Player2_Y; j < Player2_Y+10; j ++)
+        for ( i=Player2_X; i < Player2_X+10; i ++)
+        for ( j=Player2_Y; j < Player2_Y+10; j ++)
         plot_pixel(i,j, 0xEC64);
                  updateValue_Player2();
                 }
@@ -1067,8 +1202,8 @@ volatile int *pixel_ctrl_ptr = (int *)0xFF203020;
              if (dice==2){
                  if ((Player2_Y>1) && (Player2_Y<30) && (Player2_X <30)){ //At the teal tile
                      Player2_X=Player2_X+30;
-        for (int i=Player2_X; i < Player2_X+10; i ++)
-        for (int j=Player2_Y; j < Player2_Y+10; j ++)
+        for ( i=Player2_X; i < Player2_X+10; i ++)
+        for ( j=Player2_Y; j < Player2_Y+10; j ++)
         plot_pixel(i,j, 0xEC64); 
                    updateValue_Player2();
                       up2=false;
@@ -1077,8 +1212,8 @@ volatile int *pixel_ctrl_ptr = (int *)0xFF203020;
                  else if ((Player2_Y>30) && (Player2_Y<60) && (Player2_X<30)){ //At the pink tile
                    Player2_Y=Player2_Y-35;
                    Player2_X=Player2_X+30;
-        for (int i=Player2_X; i < Player2_X+10; i ++)
-        for (int j=Player2_Y; j < Player2_Y+10; j ++)
+        for ( i=Player2_X; i < Player2_X+10; i ++)
+        for ( j=Player2_Y; j < Player2_Y+10; j ++)
         plot_pixel(i,j, 0xEC64); 
                    updateValue_Player2();
                       up2=false;
@@ -1087,8 +1222,8 @@ volatile int *pixel_ctrl_ptr = (int *)0xFF203020;
                  
                  else {
                 Player2_Y=Player2_Y-60;
-        for (int i=Player2_X; i < Player2_X+10; i ++)
-        for (int j=Player2_Y; j < Player2_Y+10; j ++)
+        for ( i=Player2_X; i < Player2_X+10; i ++)
+        for ( j=Player2_Y; j < Player2_Y+10; j ++)
         plot_pixel(i,j, 0xEC64);
                   updateValue_Player2();
                  }
@@ -1096,8 +1231,8 @@ volatile int *pixel_ctrl_ptr = (int *)0xFF203020;
              if (dice==3){
                  if ((Player2_Y>1) && (Player2_Y<30) && (Player2_X <30)){ //At the teal tile
                      Player2_X=Player2_X+90;
-        for (int i=Player2_X; i < Player2_X+10; i ++)
-        for (int j=Player2_Y; j < Player2_Y+10; j ++)
+        for ( i=Player2_X; i < Player2_X+10; i ++)
+        for ( j=Player2_Y; j < Player2_Y+10; j ++)
         plot_pixel(i,j, 0xEC64); 
                    updateValue_Player2();
                       up2=false;
@@ -1106,8 +1241,8 @@ volatile int *pixel_ctrl_ptr = (int *)0xFF203020;
                  else if ((Player2_Y>30) && (Player2_Y<60) && (Player2_X<30)){ //At the pink tile
                    Player2_Y=Player2_Y-30;
                    Player2_X=Player2_X+60;
-        for (int i=Player2_X; i < Player2_X+10; i ++)
-        for (int j=Player2_Y; j < Player2_Y+10; j ++)
+        for ( i=Player2_X; i < Player2_X+10; i ++)
+        for ( j=Player2_Y; j < Player2_Y+10; j ++)
         plot_pixel(i,j, 0xEC64); 
                    updateValue_Player2();
                       up2=false;
@@ -1116,8 +1251,8 @@ volatile int *pixel_ctrl_ptr = (int *)0xFF203020;
                else if ((Player2_Y>60) && (Player2_Y<90) && (Player2_X<30)) {  //Red Tile
                    Player2_Y=Player2_Y-60;
                    Player2_X=Player2_X+30;
-        for (int i=Player2_X; i < Player2_X+10; i ++)
-        for (int j=Player2_Y; j < Player2_Y+10; j ++)
+        for ( i=Player2_X; i < Player2_X+10; i ++)
+        for ( j=Player2_Y; j < Player2_Y+10; j ++)
         plot_pixel(i,j, 0xEC64); 
                    updateValue_Player2();
                       up2=false;
@@ -1126,8 +1261,8 @@ volatile int *pixel_ctrl_ptr = (int *)0xFF203020;
                } 
            else {      
                 Player2_Y=Player2_Y-90;
-        for (int i=Player2_X; i < Player2_X+10; i ++)
-        for (int j=Player2_Y; j < Player2_Y+10; j ++)
+        for ( i=Player2_X; i < Player2_X+10; i ++)
+        for ( j=Player2_Y; j < Player2_Y+10; j ++)
         plot_pixel(i,j, 0xEC64);
                   updateValue_Player2();
            }
@@ -1140,8 +1275,8 @@ volatile int *pixel_ctrl_ptr = (int *)0xFF203020;
             if (dice==1) {
                  if ((Player2_X<=1) && (Player2_X>31) && (Player2_Y>209)){ //Red Tile
                  Player2_Y=Player2_Y-30;
-                    for (int i=Player2_X; i < Player2_X+10; i ++)
-        		for (int j=Player2_Y; j < Player2_Y+10; j ++)
+                    for ( i=Player2_X; i < Player2_X+10; i ++)
+        		for ( j=Player2_Y; j < Player2_Y+10; j ++)
         		plot_pixel(i,j, 0xEC64);
                  updateValue_Player2();
                  left2=false;
@@ -1151,19 +1286,26 @@ volatile int *pixel_ctrl_ptr = (int *)0xFF203020;
                 else if ((Player2_X>=20) && (Player2_X<49) && (Player2_Y>209)){ //Yellow Tile
                  Player2_X=Player2_X-25;
                     
-                    for (int i=Player2_X; i < Player2_X+10; i ++)
-        		for (int j=Player2_Y; j < Player2_Y+10; j ++)
+                    for ( i=Player2_X; i < Player2_X+10; i ++)
+        		for ( j=Player2_Y; j < Player2_Y+10; j ++)
         		plot_pixel(i,j, 0xEC64);
                  updateValue_Player2();
                  left2=false;
                     up2=true;
                 
                 }
+                else if ((Player2_X>=49) && (Player2_X<79) && (Player2_Y>209)){  //At the Red Tile
+                 Player2_X=Player2_X-23; 
+                    for ( i=Player2_X; i < Player2_X+10; i ++)
+        for ( j=Player2_Y; j < Player2_Y+10; j ++)
+        plot_pixel(i,j, 0xEC64);    
+                  updateValue_Player2();              
+                }
                 
                 else {
                  Player2_X=Player2_X-30; 
-        for (int i=Player2_X; i < Player2_X+10; i ++)
-        for (int j=Player2_Y; j < Player2_Y+10; j ++)
+        for ( i=Player2_X; i < Player2_X+10; i ++)
+        for ( j=Player2_Y; j < Player2_Y+10; j ++)
         plot_pixel(i,j, 0xEC64);
                  updateValue_Player2();
                 }
@@ -1172,8 +1314,8 @@ volatile int *pixel_ctrl_ptr = (int *)0xFF203020;
              if (dice==2) {
                   if ((Player2_X<=1) && (Player2_X>31) && (Player2_Y>209)){ //Red Tile
                  Player2_Y=Player2_Y-55;
-                    for (int i=Player2_X; i < Player2_X+10; i ++)
-        		for (int j=Player2_Y; j < Player2_Y+10; j ++)
+                    for ( i=Player2_X; i < Player2_X+10; i ++)
+        		for ( j=Player2_Y; j < Player2_Y+10; j ++)
         		plot_pixel(i,j, 0xEC64);
                  updateValue_Player2();
                  left2=false;
@@ -1183,18 +1325,40 @@ volatile int *pixel_ctrl_ptr = (int *)0xFF203020;
                  else if ((Player2_X>=20) && (Player2_X<49) && (Player2_Y>209)){ //Yellow Tile
                  Player2_X=Player2_X-25;
                     Player2_Y=Player2_Y-30;
-                    for (int i=Player2_X; i < Player2_X+10; i ++)
-        		for (int j=Player2_Y; j < Player2_Y+10; j ++)
+                    for ( i=Player2_X; i < Player2_X+10; i ++)
+        		for ( j=Player2_Y; j < Player2_Y+10; j ++)
         		plot_pixel(i,j, 0xEC64);
                  updateValue_Player2();
                  left2=false;
                     up2=true;
                 }
+                
+                else if ((Player2_X>=49) && (Player2_X<79) && (Player2_Y>209)){  //At the Red Tile
+                 Player2_X=Player2_X-55; 
+                    for ( i=Player2_X; i < Player2_X+10; i ++)
+        for ( j=Player2_Y; j < Player2_Y+10; j ++)
+        plot_pixel(i,j,  0xEC64);    
+                  updateValue_Player2();  
+                    left=false;
+                    up=true;
+                }
+                
+                  else if ((Player2_X>=79) && (Player2_X<109) && (Player2_Y>209)){  //At the Blue Tile
+                 Player2_X=Player2_X-58; 
+                    for ( i=Player2_X; i < Player2_X+10; i ++)
+        for ( j=Player2_Y; j < Player2_Y+10; j ++)
+        plot_pixel(i,j,  0xEC64);    
+                  updateValue_Player2();  
+                   
+                }
+                
+                
+                
                
                  else {
                  Player2_X=Player2_X-60; 
-        for (int i=Player2_X; i < Player2_X+10; i ++)
-        for (int j=Player2_Y; j < Player2_Y+10; j ++)
+        for ( i=Player2_X; i < Player2_X+10; i ++)
+        for ( j=Player2_Y; j < Player2_Y+10; j ++)
         plot_pixel(i,j, 0xEC64);
                   updateValue_Player2();
                  }
@@ -1205,8 +1369,8 @@ volatile int *pixel_ctrl_ptr = (int *)0xFF203020;
                
                 if ((Player2_X<=1) && (Player2_X>31) && (Player2_Y>209)){ //Red Tile
                  Player2_Y=Player2_Y-90;
-                    for (int i=Player2_X; i < Player2_X+10; i ++)
-        		for (int j=Player2_Y; j < Player2_Y+10; j ++)
+                    for ( i=Player2_X; i < Player2_X+10; i ++)
+        		for ( j=Player2_Y; j < Player2_Y+10; j ++)
         		plot_pixel(i,j, 0xEC64);
                  updateValue_Player2();
                  left2=false;
@@ -1219,8 +1383,8 @@ volatile int *pixel_ctrl_ptr = (int *)0xFF203020;
 
                  Player2_X=Player2_X-25;
                     Player2_Y=Player2_Y-60;
-                    for (int i=Player2_X; i < Player2_X+10; i ++)
-        		for (int j=Player2_Y; j < Player2_Y+10; j ++)
+                    for ( i=Player2_X; i < Player2_X+10; i ++)
+        		for ( j=Player2_Y; j < Player2_Y+10; j ++)
         		plot_pixel(i,j, 0xEC64);
                  updateValue_Player2();
                  left2=false;
@@ -1230,8 +1394,8 @@ volatile int *pixel_ctrl_ptr = (int *)0xFF203020;
                 else if ((Player2_X>=49) && (Player2_X<79) && (Player2_Y>209)){ //Red Tile
                  Player2_X=Player2_X-55;
                     Player2_Y=Player2_Y-30;
-                    for (int i=Player2_X; i < Player2_X+10; i ++)
-        		for (int j=Player2_Y; j < Player2_Y+10; j ++)
+                    for ( i=Player2_X; i < Player2_X+10; i ++)
+        		for ( j=Player2_Y; j < Player2_Y+10; j ++)
         		plot_pixel(i,j, 0xEC64);
                  updateValue_Player2();
                  left2=false;
@@ -1239,26 +1403,40 @@ volatile int *pixel_ctrl_ptr = (int *)0xFF203020;
                 }
                  else if ((Player2_X>=79) && (Player2_X<109) && (Player2_Y>209)){  //At the Red Tile
                 Player2_X=Player2_X-80; 
-        for (int i=Player2_X; i < Player2_X+10; i ++)
-        for (int j=Player2_Y; j < Player2_Y+10; j ++)
+        for ( i=Player2_X; i < Player2_X+10; i ++)
+        for ( j=Player2_Y; j < Player2_Y+10; j ++)
         plot_pixel(i,j, 0xEC64);    
                   updateValue_Player2();
                      left2=false;
                     up2=true;
                 }
                 
+                else if ((Player2_X>=109) && (Player2_X<139) && (Player2_Y>209)){  //At the PINK Tile
+                Player2_X=Player2_X-85; 
+              for ( i=Player2_X; i < Player2_X+10; i ++)  
+        for ( j=Player2_Y; j < Player2_Y+10; j ++)
+        plot_pixel(i,j, 0xEC64);    
+                  updateValue_Player2();  
+                }
+                
 
-               
                 
                 else{
                  Player2_X=Player2_X-90; 
-        for (int i=Player2_X; i < Player2_X+10; i ++)
-        for (int j=Player2_Y; j < Player2_Y+10; j ++)
+        for ( i=Player2_X; i < Player2_X+10; i ++)
+        for ( j=Player2_Y; j < Player2_Y+10; j ++)
         plot_pixel(i,j, 0xEC64);
                  updateValue_Player2();
                    
                 }
             }
+        }
+
+          if (player1==true){
+        changecolour=1;
+        }
+    if (player2==true){
+        changecolour=0;
         }
        
        
@@ -1269,52 +1447,52 @@ volatile int *pixel_ctrl_ptr = (int *)0xFF203020;
     if (go==1){    
     turn++;
         if (dice==1){
-            for(int i = 82; i < 200; i++) 
-        for(int j = 92; j < 156; j++) 
+            for( i = 82; i < 200; i++) 
+        for( j = 92; j < 156; j++) 
             plot_pixel(i, j, 0x0000);
           draw_line( 80,  90, 210, 90, colour[changecolour]);
           draw_line( 80,  160, 210, 160,colour[changecolour]); 
           draw_line( 80,  90, 80, 160,colour[changecolour]); 
           draw_line( 210, 90, 210, 160,colour[changecolour]); 
-            for (int i=140; i <150 ; i++ )
-        for (int j=95; j <155 ; j++)
+            for ( i=140; i <150 ; i++ )
+        for ( j=95; j <155 ; j++)
             plot_pixel (i,j, colour[changecolour]);
             
         }
        else if (dice==2){
-           for(int i = 82; i < 200; i++) 
-        for(int j = 92; j < 156; j++) 
+           for( i = 82; i < 200; i++) 
+        for( j = 92; j < 156; j++) 
             plot_pixel(i, j, 0x0000);
              draw_line( 80,  90, 210, 90, colour[changecolour]);
           draw_line( 80,  160, 210, 160,colour[changecolour]); 
           draw_line( 80,  90, 80, 160,colour[changecolour]); 
           draw_line( 210, 90, 210, 160,colour[changecolour]); 
-            for (int i=90; i <100 ; i++ )
-        for (int j=95; j <155 ; j++)
+            for ( i=90; i <100 ; i++ )
+        for ( j=95; j <155 ; j++)
             plot_pixel (i,j, colour[changecolour]);
            
-            for (int i=140; i <150 ; i++ )
-        for (int j=95; j <155 ; j++)
+            for ( i=140; i <150 ; i++ )
+        for ( j=95; j <155 ; j++)
             plot_pixel (i,j, colour[changecolour]);
             
         } else if (dice==3){
-           for(int i = 82; i < 200; i++) 
-        for(int j = 92; j < 156; j++) 
+           for( i = 82; i < 200; i++) 
+        for( j = 92; j < 156; j++) 
             plot_pixel(i, j, 0x0000);
              draw_line( 80,  90, 210, 90, colour[changecolour]);
           draw_line( 80,  160, 210, 160,colour[changecolour]); 
           draw_line( 80,  90, 80, 160,colour[changecolour]); 
           draw_line( 210, 90, 210, 160,colour[changecolour]); 
-            for (int i=90; i <100 ; i++ )
-        for (int j=95; j <155 ; j++)
+            for ( i=90; i <100 ; i++ )
+        for ( j=95; j <155 ; j++)
             plot_pixel (i,j, colour[changecolour]);
            
-            for (int i=140; i <150 ; i++ )
-        for (int j=95; j <155 ; j++)
+            for ( i=140; i <150 ; i++ )
+        for ( j=95; j <155 ; j++)
             plot_pixel (i,j, colour[changecolour]);
            
-            for (int i=190; i <200 ; i++ )
-        for (int j=95; j <155 ; j++)
+            for ( i=190; i <200 ; i++ )
+        for ( j=95; j <155 ; j++)
             plot_pixel (i,j, colour[changecolour]);
            
            
@@ -1328,17 +1506,20 @@ volatile int *pixel_ctrl_ptr = (int *)0xFF203020;
      if ((player1==true) && (player2==true)){
        if (Money1>Money2){
         player1win();
+       // tie();
            break;
         }
         else  if (Money2>Money1){
-           player2win();   
+           player2win(); 
+        //  tie();  
             break;
           }
+          
        }
        
        v_sync_wait();
        
-    }  
+    } 
     }
 }
 
@@ -1933,4 +2114,3 @@ void PS2_ISR() {
         }
     }
 }
-
